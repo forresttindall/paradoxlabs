@@ -1,0 +1,122 @@
+:root {
+  --background: #0a0a0a;
+  --text: #e5e5e5;
+  --h1: #ffffff;
+  --green: #AAFF1D;
+  --accent: #7bbf00;
+  --dark-bg: #141618;
+  --border-color: rgba(123, 191, 0, 0.1);
+}
+
+
+.footer-container {
+  background: var(--background);
+  color: #A1A1AA;
+  padding: 60px 20px 30px;
+  font-family: "Kode Mono", monospace;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.footer-logo-section {
+  flex: 1;
+  min-width: 250px;
+}
+
+.footer-logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.footer-logo-image {
+  height: 30px;
+  width: auto;
+  display: block;
+  position: relative;
+  top: -3px; /* Move the logo up by 5px */
+}
+
+.footer-logo {
+  font-size: 1.8rem;
+  margin: 0;
+  color: white;
+  line-height: 1;
+}
+
+.footer-tagline {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 60px;
+  flex-wrap: wrap;
+}
+
+.footer-links-column {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.footer-links-column h4 {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+  color: white;
+}
+
+.footer-links-column a {
+  color: #A1A1AA;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.footer-links-column a:hover {
+  color: #7bbf00;
+}
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 40px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .footer-links {
+    gap: 30px;
+  }
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+
+  .footer-content {
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .footer-links {
+    gap: 30px;
+  }
+}

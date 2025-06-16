@@ -1,0 +1,75 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Kode+Mono:wght@400..700&family=Geist+Mono:wght@100..900&display=swap');
+
+
+/* CSS Variables */
+:root {
+  --background: #0a0a0a;
+  --text: #e5e5e5;
+  --h1: #ffffff;
+  --green: #AAFF1D;
+  --dark-bg: #141618;
+  --border-color: rgba(123, 191, 0, 0.1);
+}
+
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Kode Mono", monospace;
+  background-color: var(--background);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.btn {
+  padding: 8px 20px;
+  background: rgba(123, 191, 0, 0.1);
+  
+  border: 1px solid rgba(123, 191, 0, 0.5);
+  border-radius: 8px;
+  color: #7bbf00;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.btn:hover {
+  background: rgba(123, 191, 0, 0.2);
+  border-color: #7bbf00;
+  box-shadow: 0 0 15px rgba(123, 191, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(35, 35, 35);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--green);
+}

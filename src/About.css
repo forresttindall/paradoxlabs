@@ -1,0 +1,180 @@
+/* About Page Styles */
+.about-page {
+  padding: 80px 20px;
+  background: var(--background);
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.about-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.about-header h1 {
+  font-size: 3rem;
+  color: var(--h1);
+  margin-bottom: 1rem;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.about-header p {
+  font-size: 1.2rem;
+  color: var(--text);
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.about-content {
+  margin-bottom: 4rem;
+}
+
+.about-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  margin-bottom: 4rem;
+  padding: 2rem 0;
+}
+
+.about-section.reverse {
+  grid-template-columns: 1fr 1fr;
+}
+
+.about-section.reverse .about-text {
+  order: 2;
+}
+
+.about-section.reverse .about-image {
+  order: 1;
+}
+
+.about-text h2 {
+  font-size: 2.2rem;
+  color: var(--h1);
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+.about-text p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+}
+
+.about-image {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.about-image img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.about-image:hover img {
+  transform: scale(1.05);
+}
+
+.about-cta {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.about-cta h2 {
+  font-size: 2.5rem;
+  color: var(--h1);
+  margin-bottom: 1rem;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.about-cta p {
+  font-size: 1.2rem;
+  color: var(--text);
+  opacity: 0.8;
+  margin-bottom: 2rem;
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .about-page {
+    padding: 60px 15px;
+  }
+  
+  .about-header h1 {
+    font-size: 2.5rem;
+  }
+  
+  .about-header p {
+    font-size: 1.1rem;
+  }
+  
+  .about-section {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+  
+  .about-section.reverse {
+    grid-template-columns: 1fr;
+  }
+  
+  .about-section.reverse .about-text,
+  .about-section.reverse .about-image {
+    order: unset;
+  }
+  
+  .about-text h2 {
+    font-size: 1.8rem;
+  }
+  
+  .about-text p {
+    font-size: 1rem;
+  }
+  
+  .about-image img {
+    height: 250px;
+  }
+  
+  .about-cta {
+    padding: 2rem 1.5rem;
+  }
+  
+  .about-cta h2 {
+    font-size: 2rem;
+  }
+  
+  .about-cta p {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-header h1 {
+    font-size: 2rem;
+  }
+  
+  .about-text h2 {
+    font-size: 1.6rem;
+  }
+  
+  .about-cta h2 {
+    font-size: 1.8rem;
+  }
+  
+
+}

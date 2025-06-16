@@ -1,0 +1,541 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 20px;
+  pointer-events: none;
+}
+
+.floating-nav {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: rgba(20, 22, 24, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(123, 191, 0, 0.2);
+  border-radius: 12px;
+  padding: 8px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: auto;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--h1);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.brand-text {
+  color: var(--h1);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-links a {
+  color: #a1a1aa;
+  text-decoration: none;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+  padding: 8px 16px;
+  border-radius: 6px;
+}
+
+.nav-links a:hover {
+  color: var(--accent);
+  text-shadow: 0 0 10px rgba(123, 191, 0, 0.5);
+}
+
+/* Cart Link Styles */
+.cart-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.cart-link:hover {
+  background: rgba(123, 191, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: var(--accent);
+  color: #000;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 50%;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Kode Mono', monospace;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(123, 191, 0, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(123, 191, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(123, 191, 0, 0);
+  }
+}
+
+
+/* Add this if you want the gradient effect on hover */
+.nav-brand svg:hover {
+  filter: drop-shadow(0 0 8px rgba(123, 191, 0, 0.3));
+}
+
+.nav-brand:hover .home-icon {
+  filter: drop-shadow(0 0 8px rgba(123, 191, 0, 0.3));
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.social-dropdown {
+  position: relative;
+}
+
+.dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: #A1A1AA;
+  font-family: "Kode Mono", monospace;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 8px 5px;
+  margin: 0;
+  line-height: normal;
+  transition: all 0.3s ease;
+}
+
+.dropdown-caret {
+  transition: transform 0.2s ease;
+}
+
+.dropdown-caret.open {
+  transform: rotate(360deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #141618;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(123, 191, 0, 0.1);
+  border-radius: 12px;
+  padding: 8px;
+  min-width: 180px;
+  color: #A1A1AA;
+  font-family: "Kode Mono", monospace;
+  backdrop-filter: blur(10px);
+  animation: fadeIn 0.2s ease;
+  z-index: 1100; /* Higher z-index than cart badge */
+  
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  color: #A1A1AA;
+  font-family: "Kode Mono", monospace;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  border-radius: 4px;
+  text-align: right;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.threads-logo {
+  width: 20px;
+  height: 20px;
+}
+
+.dropdown-item .threads-logo path {
+  fill: currentColor;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 800px) {
+  .header {
+    padding: 15px;
+  }
+
+  .floating-nav {
+    padding: 3px 20px;
+    position: relative;
+    z-index: 1001;
+    justify-content: flex-start;
+  }
+
+  .nav-brand {
+    font-size: 1.25rem;
+    order: 1;
+    flex: 0 0 auto;
+    width: auto;
+    max-width: fit-content;
+    flex-shrink: 0;
+  }
+
+  /* Hide brand text on mobile */
+  .brand-text {
+    display: none;
+  }
+
+  .mobile-menu-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    order: 2;
+    margin-left: auto;
+    pointer-events: auto;
+    z-index: 1002;
+    position: relative;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #141618;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(123, 191, 0, 0.1);
+    border-radius: 12px;
+    margin-top: 10px;
+    padding: 16px;
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 1000;
+    order: 3;
+    width: 100%;
+  }
+
+  .nav-links.mobile-open {
+    display: flex !important;
+  }
+
+  .nav-links a {
+    width: 100%;
+    text-align: right;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+  }
+
+  .social-dropdown {
+    width: 100%;
+    position: relative;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin: 4px 0;
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box; /* Ensure padding is included in width */
+    overflow: hidden; /* Prevent content from spilling out */
+    z-index: 1200; /* Even higher z-index for mobile */
+    
+  }
+  
+  .dropdown-menu i {
+    color: #7bbf00;
+  }
+
+  .dropdown-trigger {
+    width: 100%;
+    justify-content: flex-end;
+    text-align: right;
+  }
+
+  .dropdown-item {
+    margin: 0;
+    padding: 8px 8px;
+  
+    width: 100%;
+    box-sizing: border-box; /* Ensure padding is included in width */
+  }
+
+  .dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+}
+
+.mobile-menu-button {
+  color: #A1A1AA;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  transition: transform 1s ease;
+}
+
+/* Show mobile menu button on mobile */
+@media (max-width: 800px) {
+  .mobile-menu-button {
+    display: flex !important;
+  }
+}
+
+.mobile-menu-button.open {
+  transform: rotate(360deg);
+}
+
+/* Hide nav-links on desktop */
+@media (min-width: 801px) {
+  .nav-links {
+    display: flex;
+  }
+  
+  .mobile-menu-button {
+    display: none !important;
+  }
+}
+
+.nav-button {
+  color: #A1A1AA;
+  font-family: "Kode Mono", monospace;
+  text-decoration: none;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease;
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-button:hover {
+  color: #7bbf00;
+  text-shadow: 0 0 10px rgba(123, 191, 0, 0.5);
+}
+
+/* Update mobile styles */
+@media (max-width: 800px) {
+  .nav-button {
+    font-size: 0.9rem;
+    padding: 6px 8px;
+    width: 100%;
+    text-align: right;
+  }
+}
+
+.logo {
+  height: 30px;
+  transition: 0.6s ease all;
+}
+
+.logo:hover {
+  scale: 1.1;
+}
+
+.logo.spin {
+  animation: spinOnce 1s ease forwards;
+}
+
+@keyframes spinOnce {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.social-dropdown .dropdown-trigger:hover .fa-share-nodes {
+  color: #7bbf00;
+  text-shadow: 0 0 10px rgba(123, 191, 0, 0.5);
+}
+
+/* Add this for the gradient definition */
+.social-icon {
+    font-size: 1.2rem;
+    color: #7bbf00;
+    transition: all 0.3s ease;
+}
+
+.dropdown-item svg {
+    margin-right: 8px;
+    color: #7bbf00;
+}
+
+/* Update the share icon button */
+.dropdown-trigger svg {
+  color: #A1A1AA;
+    transition: all 0.3s ease;
+}
+
+/* Hover effect for the share icon */
+.social-dropdown .dropdown-trigger:hover svg {
+    color: #7bbf00;
+    text-shadow: 0 0 10px rgba(123, 191, 0, 0.5);
+}
+
+
+
+/* Hover effect for the share icon */
+.dropdown-trigger:hover {
+    color: #7bbf00;
+    text-shadow: 0 0 10px rgba(123, 191, 0, 0.5);
+}
+
+/* Style for all FontAwesome icons in the dropdown */
+.dropdown-item .fa-threads,
+.dropdown-item .fa-instagram,
+.dropdown-item .fa-bluesky,
+.dropdown-trigger .fa-share-nodes {
+    color: #7bbf00;
+}
+
+/* Add hover glow effect */
+.dropdown-trigger:hover .fa-share-nodes {
+  text-shadow: 0 0 10px rgba(123, 191, 0, 0.5);
+}
+
+/* Cart Styles */
+.cart-container {
+  position: relative;
+  display: flex-end;
+  align-items: center;
+  margin-left: auto; /* This will push the cart to the right */
+  margin-right: 0;
+  right: 0;
+}
+
+.cart-link {
+  color: #A1A1AA;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.cart-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.cart-icon {
+  transition: all 0.3s ease;
+}
+
+.cart-link:hover .cart-icon {
+  color: #7bbf00;
+  text-shadow: 0 0 10px rgba(123, 191, 0, 0.5);
+}
+
+/* Add this to ensure the badge remains visible on hover */
+.cart-link:hover .cart-badge {
+  color: white;
+  -webkit-text-fill-color: white;
+  background-clip: border-box;
+
+}
+
+.cart-badge {
+  position: absolute;
+  top: 0;
+  right: 5px;
+  background: #7bbf00;
+  color: white;
+  font-size: 0.7rem;
+  font-family: "Kode Mono", monospace;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  z-index: 10; /* Lower z-index so dropdown menus appear above it */
+}
+
+/* Mobile styles for cart */
+@media (max-width: 800px) {
+  .cart-link {
+    width: 100%;
+    justify-content: flex-end;
+    padding: 12px 16px;
+    text-align: right;
+    position: relative;
+  }
+  
+  .cart-badge {
+    position: absolute;
+    top: 8px;
+    left: 28px;
+    right: auto;
+    z-index: 5;
+    transform: none;
+  }
+  
+  .cart-container {
+    width: 100%;
+  }
+}
