@@ -1,9 +1,13 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import './ProductDetail.css';
 import { CartContext } from './CartContext';
 
 function ProductDetail() {
+    useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
+
   const { id } = useParams();
   const productId = id;
   const navigate = useNavigate();
@@ -21,16 +25,14 @@ function ProductDetail() {
             price: 100,
             shipping: 7,
             shortDescription: 'Ultra-secure portable storage with military-grade encryption',
-            fullDescription: 'The Stealth USB represents the pinnacle of secure portable storage technology. Engineered for professionals who demand absolute data security, this device combines cutting-edge encryption with a virtually undetectable form factor. Whether you\'re a security professional, journalist, or anyone who values data privacy, the Stealth USB ensures your sensitive information remains protected against even the most sophisticated threats.',
+            fullDescription: 'The Stealth USB represents the pinnacle of secure portable storage technology. Engineered for professionals who demand absolute data security, this device combines AES-256 encryption with a stealth form factor. Whether you\'re a security professional, journalist, or anyone who values data privacy, the Stealth USB ensures your sensitive information remains protected against even the most sophisticated threats.',
             images: [
-                '/Images/_DSC1120.jpg',
-                '/Images/_DSC1120.jpg',
                 '/Images/_DSC1120.jpg'
             ],
             specifications: {
                 'Storage Capacity': '128GB',
                 'Encryption': 'AES-256 Hardware Encryption',
-                'Authentication': 'Biometric + PIN',
+                'Authentication': '256bit Encryption Key',
                 'Operating System': 'Windows, macOS, Linux',
                 'Interface': 'USB 3.2 Gen 1',
                 'Data Transfer Rate': 'Up to 150 MB/s read, 80 MB/s write',
@@ -45,13 +47,13 @@ function ProductDetail() {
             },
             features: [
                 'Military-grade AES-256 encryption',
-                'Biometric fingerprint scanner',
+                'High-speed USB 3.2 Gen 1 interface',
                 'Self-destruct mechanism',
                 'Tamper-evident design',
                 'Zero-footprint operation',
                 'Cross-platform compatibility'
             ],
-            inventory: 5,
+            inventory: 10,
             category: 'storage'
         },
         'splice': {
@@ -60,15 +62,14 @@ function ProductDetail() {
             price: 40,
             shipping: 7,
             shortDescription: 'Covert non-metalic ultra tough last ditch multi-tool',
-            fullDescription: 'The Splice is the ultimate covert multi-tool, designed for situations where traditional metal tools would be detected or confiscated. Crafted from advanced polymer composites and ceramic materials, this tool passes through standard metal detectors while providing essential functionality when you need it most. Its ergonomic design and tactical applications make it an indispensable tool for security professionals and prepared individuals.',
+            fullDescription: 'The Splice is the ultimate covert multi-tool, designed for situations where traditional metal tools would be detected or confiscated. Crafted from advanced polymer composites, this tool passes through standard metal detectors while providing essential functionality when you need it most. Its ergonomic design and tactical applications make it an indispensable tool for security professionals and prepared individuals.',
             images: [
                 '/Images/product2.jpg'
             ],
             specifications: {
-                'Material': 'Advanced Polymer Composite + Ceramic',
+                'Material': 'Advanced Carbon Fiber Polymer Composite',
                 'Blade Length': '75mm',
                 'Handle Length': '95mm',
-                'Edge Retention': 'Superior ceramic cutting edge',
                 'Detection': 'Metal detector safe',
                 'Durability': 'Impact resistant to 50J',
                 'Temperature Range': '-40°C to 120°C',
@@ -83,13 +84,13 @@ function ProductDetail() {
             },
             features: [
                 'Non-metallic construction',
-                'Ceramic cutting edge',
+
                 'Ergonomic grip design',
                 'Corrosion resistant',
                 'Lightweight yet durable',
                 'Discreet appearance'
             ],
-            inventory: 8,
+            inventory: 10,
             category: 'tools'
         },
         'test': {
@@ -128,7 +129,7 @@ function ProductDetail() {
                 'Encrypted communication',
                 'Emergency wipe function'
             ],
-            inventory: 0,
+            inventory: 5,
             category: 'storage'
         },
         'stickers': {
@@ -167,7 +168,7 @@ function ProductDetail() {
                 'Removable without residue',
                 '5 unique tech-themed designs'
             ],
-            inventory: 20,
+            inventory: 10,
             category: 'accessories'
         }
     };

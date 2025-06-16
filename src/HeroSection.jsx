@@ -1,5 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './HeroSection.css';
+import './App.css';
+
 
 function HeroSection() {
     const Logo = '/Images/logo.png';

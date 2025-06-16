@@ -29,13 +29,13 @@ const NewsletterSignup = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.REACT_APP_SENDER_API_KEY}`,
+          'Authorization': `Bearer ${import.meta.env.VITE_SENDER_API_KEY}`,
           'Accept': 'application/json'
         },
         body: JSON.stringify({
           email: formData.email,
           firstname: formData.firstName,
-          groups: [process.env.REACT_APP_SENDER_GROUP_ID || 'default']
+          groups: [import.meta.env.VITE_SENDER_GROUP_ID || 'default']
         })
       });
 

@@ -1,9 +1,13 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom'
 import './Shop.css';
 import { CartContext } from './CartContext';
 
 function Shop() {
+    useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
+
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [addedToCart, setAddedToCart] = useState({});
     const { addToCart } = useContext(CartContext);
@@ -27,7 +31,7 @@ function Shop() {
             image: '/Images/_DSC1120.jpg',
             category: 'storage',
             shipping: 7,
-            inventory: 5
+            inventory: 10
         },
         {
             id: 'splice',
@@ -37,7 +41,7 @@ function Shop() {
             image: '/Images/product2.jpg',
             category: 'tools',
             shipping: 7,
-            inventory: 5
+            inventory: 10
         },
         {
             id: 'stickers',
@@ -45,9 +49,9 @@ function Shop() {
             description: 'Durable UV resitant vinyl sticker pack.',
             price: 13,
             image: '/Images/paradoxlabsgreen.jpg',
-            category: 'storage',
+            category: 'other',
             shipping: 3,
-            inventory: 20
+            inventory: 10
         },
         {
             id: 'test',
@@ -55,9 +59,9 @@ function Shop() {
             description: 'Self-destructing storage device with biometric access',
             price: 0.50,
             image: '/Images/product2.jpg',
-            category: 'storage',
+            category: 'other',
             shipping: 0,
-            inventory: 0
+            inventory: 5
         },
     ];
     

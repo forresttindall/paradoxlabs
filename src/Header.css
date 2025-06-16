@@ -483,6 +483,7 @@
 
 .cart-icon {
   transition: all 0.3s ease;
+  
 }
 
 .cart-link:hover .cart-icon {
@@ -492,8 +493,10 @@
 
 /* Add this to ensure the badge remains visible on hover */
 .cart-link:hover .cart-badge {
-  color: white;
-  -webkit-text-fill-color: white;
+  color: #7bbf00;
+  text-shadow: 0 0 10px rgba(123, 191, 0, 0.5);
+  -webkit-text-fill-color: #7bbf00;
+  -webkit-background-clip: text;
   background-clip: border-box;
 
 }

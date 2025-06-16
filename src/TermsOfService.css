@@ -1,0 +1,161 @@
+.terms-page {
+  padding: 80px 20px;
+  background: var(--background);
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.terms-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.terms-header h1 {
+  font-size: 3rem;
+  color: var(--h1);
+  margin-bottom: 1rem;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.terms-header p {
+  font-size: 1.2rem;
+  color: var(--text);
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.terms-content {
+  margin-bottom: 4rem;
+}
+
+.terms-section {
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.terms-section h2 {
+  font-size: 2rem;
+  color: var(--h1);
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.5rem;
+}
+
+.terms-section p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+}
+
+.terms-section ul {
+  margin: 1rem 0 1.5rem 1.5rem;
+  color: var(--text);
+}
+
+.terms-section li {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 0.8rem;
+  opacity: 0.9;
+  position: relative;
+}
+
+.terms-section li::before {
+  content: "▸";
+  color: var(--text);
+  font-weight: bold;
+  position: absolute;
+  left: -1.2rem;
+}
+
+.terms-section a {
+  color: var(--green);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.terms-section a:hover {
+  color: var(--green);
+  text-decoration: underline;
+}
+
+.terms-section strong {
+  color: var(--h1);
+  font-weight: 600;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Highlight important sections */
+.terms-section:nth-child(6), /* Sales Policy */
+.terms-section:nth-child(7), /* Limitation of Liability */
+.terms-section:nth-child(8) { /* Prohibited Uses */
+  background: rgba(52, 11, 11, 0.2);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  color: #dc2626;
+}
+
+.terms-section:nth-child(6) h2,
+.terms-section:nth-child(7) h2,
+.terms-section:nth-child(8) h2 {
+  color: #dc2626;
+  border-bottom-color: rgba(255, 107, 53, 0.3);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .terms-page {
+    padding: 60px 15px;
+  }
+  
+  .terms-header h1 {
+    font-size: 2.2rem;
+  }
+  
+  .terms-header p {
+    font-size: 1.1rem;
+  }
+  
+  .terms-section {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .terms-section h2 {
+    font-size: 1.6rem;
+  }
+  
+  .terms-section p,
+  .terms-section li {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .terms-page {
+    padding: 40px 10px;
+  }
+  
+  .terms-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .terms-section {
+    padding: 1rem;
+  }
+  
+  .terms-section h2 {
+    font-size: 1.4rem;
+  }
+}

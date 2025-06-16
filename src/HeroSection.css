@@ -7,7 +7,7 @@
   align-items: center;
   padding: 80px 20px 40px;
   justify-content: center;
-  background-image: url('/Images/background1.jpg');
+  background-image: url('/Images/servers.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -23,7 +23,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.3);
   z-index: 2;
 }
 
@@ -47,7 +47,7 @@
 .hero-brand img {
   max-width: 80px;
   height: auto;
-  filter: drop-shadow(0 0 20px rgba(123, 191, 0, 0.3));
+  filter: drop-shadow(0 0 20px rgba(0, 191, 127, 0.3));
 }
 
 .hero-brand h1 {
@@ -65,6 +65,26 @@
   color: white;
   opacity: 0.9;
 }
+
+.btn {
+  padding: 8px 20px;
+  background: rgba(0, 191, 95, 0.1);
+  border: 1px solid rgba(123, 191, 0, 0.5);
+  border-radius: 8px;
+  color: var(--green);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.btn:hover {
+  background: rgba(123, 191, 0, 0.2);
+  color: var(--green);
+  box-shadow: 0 0 15px rgba(123, 191, 0, 0.3);
+  transform: translateY(-2px);
+}
+
 
 .hero-content {
   animation: fadeIn 1s ease-out;

@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
 import './Contact.css';
 
 const Contact = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -28,8 +33,8 @@ const Contact = () => {
     try {
       // EmailJS configuration - replace with your actual service ID, template ID, and public key
       const result = await emailjs.send(
-        process.env.REACT_APP_EMAILJS_SERVICE_ID || 'your_service_id',
-        process.env.REACT_APP_EMAILJS_TEMPLATE_ID || 'your_template_id',
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
         {
           from_name: formData.name,
           from_email: formData.email,
@@ -37,7 +42,7 @@ const Contact = () => {
           message: formData.message,
           to_name: 'Paradox Labs Team'
         },
-        process.env.REACT_APP_EMAILJS_PUBLIC_KEY || 'your_public_key'
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'your_public_key'
       );
 
       if (result.status === 200) {

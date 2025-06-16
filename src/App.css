@@ -8,8 +8,9 @@
   --text: #e5e5e5;
   --h1: #ffffff;
   --green: #AAFF1D;
+  --accent: #AAFF1D;
   --dark-bg: #141618;
-  --border-color: rgba(123, 191, 0, 0.1);
+  --border-color: rgba(145, 120, 255, 0.1);
 }
 
 /* Reset and base styles */

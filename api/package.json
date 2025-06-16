@@ -1,0 +1,9 @@
+{
+  "name": "paradoxlabs-api",
+  "version": "1.0.0",
+  "description": "Serverless API functions for Paradox Labs",
+  "main": "index.js",
+  "dependencies": {
+    "stripe": "^14.0.0"
+  }
+}
