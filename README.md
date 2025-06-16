@@ -1,93 +1,79 @@
-# Vorb ⚡️
+# Paradox Labs
 
-![vorb](https://github.com/user-attachments/assets/f6622cd3-a9cf-471a-bc0e-14a0ca8b8d6a)
+The official website for Paradox Labs - a cutting-edge technology company focused on innovative solutions and digital experiences.
 
-## Ultra-Fast React + Vite Static App Template, Built with Bun
+## About Paradox Labs
 
-### Easy to launch
+Paradox Labs is a forward-thinking technology company that specializes in creating innovative digital solutions. We combine creativity with technical expertise to deliver exceptional products and services.
+
+## Website Features
+
+- **Modern Design**: Clean, professional interface built with React
+- **Responsive Layout**: Optimized for all devices and screen sizes
+- **Contact Integration**: EmailJS-powered contact form for seamless communication
+- **Newsletter Signup**: Sender.net integration for subscriber management
+- **Performance Optimized**: Built with Vite for fast loading and smooth user experience
+
+## Technology Stack
+
+- **Frontend**: React 18
+- **Build Tool**: Vite
+- **Styling**: CSS3 with modern design patterns
+- **Email Service**: EmailJS for contact forms
+- **Newsletter**: Sender.net API integration
+- **Deployment**: Optimized for static hosting
+
+## Development
+
+### Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn
+
+### Getting Started
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+4. Build for production:
+   ```bash
+   npm run build
+   ```
+
+### Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```env
+REACT_APP_EMAILJS_SERVICE_ID=your_service_id
+REACT_APP_EMAILJS_TEMPLATE_ID=your_template_id
+REACT_APP_EMAILJS_PUBLIC_KEY=your_public_key
+REACT_APP_SENDER_API_KEY=your_sender_api_key
+REACT_APP_SENDER_GROUP_ID=your_group_id
 ```
-bun create-vorb your-app
-```
 
-**Vorb** is a lightning-fast, minimalist static site template built with React and Vite, powered by the Bun runtime.
-
-It’s designed for developers who want total control, zero bloat, and immediate performance — without being locked into a rigid, opinionated framework like Next.js.
-
----
-
-## Why Vorb?
-
-**Fast by default. Lightweight by design.**  
-Vorb gives you everything you need to launch a static site or web app in seconds — and nothing you don’t.
-
-### Key Advantages:
-
-- **JavaScript or Typescript support**  
-  Built for speed and simplicity. Pure JSX/JS for simplicity, or TypeScript
-
-- **Powered by Bun**  
-  Uses Bun for blazing-fast installs, scripts, and development tooling.
-
-- **Vite for Modern DX**  
-  Lightning-fast HMR, optimized builds, and native ES module support.
-
-- **Minimal and Flexible**  
-  No routing frameworks, no config overhead. Modify or extend however you want.
-
-- **React Without the Bloat**  
-  A lean React base without unnecessary wrappers or abstractions.
-
-- **Truly Unopinionated**  
-  Vorb doesn’t force you into a specific architecture, folder structure, or dependency chain. Unlike frameworks like Next.js, you're in charge.
-
----
-
-## Ideal Use Cases
-
-- Static sites and landing pages
-- Developer tools
-- Web3 frontends and dashboards
-- Small, fast SPAs
-- Kiosk and embedded apps
-- GitHub Pages or IPFS-hosted apps
-
----
-
-## File Structure
+## Project Structure
 
 ```
-vorb/
+paradoxlabs/
 ├── public/
-│   └── images/
-│       └── vorb.png
+│   ├── images/
+│   └── index.html
 ├── src/
-│   ├── app.css
-│   ├── app.jsx
-│   ├── index.css
-│   └── main.jsx
-├── .gitignore
-├── index.html
+│   ├── components/
+│   ├── pages/
+│   ├── App.jsx
+│   ├── App.css
+│   └── index.js
 ├── package.json
-├── vite.config.js
-├── README.md
-└── LICENSE
+└── README.md
 ```
-
 
 ---
 
-## Getting Started
-
-### 1. Install Bun
-
-If you haven’t installed Bun yet, you can do so with the following command:
-
-```bash
-curl -fsSL https://bun.sh/install | bash
-```
-### 2. launch a Vorb app
-
-To spin up a new Vorb project in seconds:
-
-```bash
-bun create-vorb your-app
+*This is a private repository for Paradox Labs internal development.*
