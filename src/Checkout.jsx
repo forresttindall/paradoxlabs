@@ -326,20 +326,26 @@ const CheckoutForm = () => {
         setShowError(true);
         setIsProcessing(false);
       } else if (paymentIntent.status === 'succeeded') {
-        // Payment succeeded
-        clearCart();
-        
+        // Payment succeeded - prepare order details before clearing cart
         const orderDetails = {
           orderNumber: paymentIntent.id,
           orderDate: new Date(),
           email: formData.email,
-          items: cartItems,
-          subtotal: orderTotal.subtotal,
-          shipping: orderTotal.shipping,
-          tax: orderTotal.tax,
-          total: orderTotal.total,
+          items: cartItems.map(item => ({
+            id: item.id,
+            name: item.name,
+            description: item.description || '',
+            price: item.price,
+            quantity: item.quantity,
+            image: item.image || '/placeholder-image.jpg'
+          })),
+          subtotal: orderTotal.subtotal / 100, // Convert from cents to dollars
+          shipping: orderTotal.shipping / 100,
+          tax: orderTotal.tax / 100,
+          total: orderTotal.total / 100,
           paymentMethod: {
-            last4: '****', // You can get this from the payment method if needed
+            last4: paymentMethod.card?.last4 || '****',
+            brand: paymentMethod.card?.brand || 'card'
           },
           shippingAddress: {
             firstName: formData.sameAsShipping ? formData.firstName : formData.shippingFirstName,
@@ -352,11 +358,15 @@ const CheckoutForm = () => {
           },
         };
         
+        // Clear cart after successful payment
+        clearCart();
+        
         // Navigate to success page with order details
         navigate('/order-confirmation', {
           state: {
             orderDetails: orderDetails,
           },
+          replace: true // Prevent going back to checkout
         });
       }
     } catch (error) {

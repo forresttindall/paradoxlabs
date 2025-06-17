@@ -166,17 +166,35 @@ const OrderConfirmation = () => {
               <div className="step">
                 <div className="step-icon">📧</div>
                 <h3>Confirmation Email</h3>
-                <p>You'll receive an order confirmation email shortly with all the details.</p>
+                <p>A confirmation email has been sent to <strong>{orderDetails.email}</strong> with your order details and receipt.</p>
               </div>
               <div className="step">
                 <div className="step-icon">📦</div>
-                <h3>Processing</h3>
-                <p>Your order will be processed and shipped within 1-2 business days.</p>
+                <h3>Order Processing</h3>
+                <p>Your order is being prepared and will be processed within 1-2 business days. You'll receive updates via email.</p>
               </div>
               <div className="step">
                 <div className="step-icon">🚚</div>
-                <h3>Shipping</h3>
-                <p>You'll receive tracking information once your order ships.</p>
+                <h3>Shipping & Tracking</h3>
+                <p>Once your order ships, you'll receive tracking information to monitor your package's progress.</p>
+              </div>
+              <div className="step">
+                <div className="step-icon">💬</div>
+                <h3>Customer Support</h3>
+                <p>Questions about your order? Contact us anytime - we're here to help!</p>
+              </div>
+            </div>
+            
+            <div className="important-notice">
+              <div className="notice-icon">ℹ️</div>
+              <div className="notice-content">
+                <h4>Important Information</h4>
+                <ul>
+                  <li>Please save this order number for your records: <strong>#{orderDetails.orderNumber}</strong></li>
+                  <li>Check your email (including spam folder) for the confirmation receipt</li>
+                  <li>Processing times may vary during peak seasons</li>
+                  <li>You can contact customer support with any questions about your order</li>
+                </ul>
               </div>
             </div>
           </div>
