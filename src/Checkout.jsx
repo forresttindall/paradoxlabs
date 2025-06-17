@@ -96,24 +96,41 @@ const CheckoutForm = () => {
     }
   }, [cartItems, navigate]);
 
-  // Create payment intent when email is provided
+  // Create payment intent when sufficient information is provided
   useEffect(() => {
-    if (cartItems.length > 0 && formData.email && formData.email.includes('@')) {
+    if (cartItems.length > 0 && formData.email && formData.email.includes('@') && 
+        formData.firstName && formData.lastName && formData.billingAddress && 
+        formData.billingCity && formData.billingState && formData.billingZip) {
       createPaymentIntentOnServer();
     }
-  }, [cartItems, orderTotal, formData.email]);
+  }, [cartItems, orderTotal, formData.email, formData.firstName, formData.lastName, 
+      formData.billingAddress, formData.billingCity, formData.billingState, formData.billingZip]);
 
   const createPaymentIntentOnServer = async () => {
     try {
       setIsProcessing(true);
+      setError(null);
+      setShowError(false);
       
-      // Only create payment intent if we have sufficient billing information
-      // when "same as billing" is checked
-      if (formData.sameAsShipping) {
-        if (!formData.billingAddress || !formData.billingCity || !formData.billingState || !formData.billingZip || !formData.firstName || !formData.lastName) {
-          // Don't create payment intent yet if required billing fields are missing
-          setIsProcessing(false);
-          return;
+      // Validate required fields before creating payment intent
+      if (!formData.email || !formData.email.includes('@')) {
+        throw new Error('Valid email address is required');
+      }
+      
+      if (!formData.firstName || !formData.lastName) {
+        throw new Error('First and last name are required');
+      }
+      
+      if (!formData.billingAddress || !formData.billingCity || !formData.billingState || !formData.billingZip) {
+        throw new Error('Complete billing address is required');
+      }
+      
+      // Validate shipping information if different from billing
+      if (!formData.sameAsShipping) {
+        if (!formData.shippingFirstName || !formData.shippingLastName || 
+            !formData.shippingAddress || !formData.shippingCity || 
+            !formData.shippingState || !formData.shippingZip) {
+          throw new Error('Complete shipping address is required');
         }
       }
       
@@ -136,15 +153,29 @@ const CheckoutForm = () => {
         phone: formData.phone,
       };
       
+      console.log('Creating payment intent with:', {
+        itemCount: cartItems.length,
+        customerEmail: customerInfo.email,
+        shippingName: shippingInfo.name,
+        orderTotal: orderTotal
+      });
+      
       const response = await createPaymentIntent(cartItems, shippingInfo, customerInfo);
       
+      if (!response || !response.client_secret) {
+        throw new Error('Invalid response from payment service');
+      }
+      
       setClientSecret(response.client_secret);
+      console.log('Payment intent created successfully');
       
     } catch (error) {
       console.error('Error creating payment intent:', error);
-      setError('Failed to initialize payment. Please try again.');
-      // Only show error if user has interacted with the form
-      if (hasUserInteracted) {
+      const errorMessage = error.message || 'Failed to initialize payment. Please try again.';
+      setError(errorMessage);
+      
+      // Show error immediately if it's a validation error or if user has interacted
+      if (error.message.includes('required') || hasUserInteracted) {
         setShowError(true);
       }
     } finally {
@@ -158,10 +189,21 @@ const CheckoutForm = () => {
     const { name, value, type, checked } = e.target;
     const newValue = type === 'checkbox' ? checked : value;
     
+    // Clear any existing errors when user starts typing
+    if (error && showError) {
+      setError(null);
+      setShowError(false);
+    }
+    
     setFormData(prev => ({
       ...prev,
       [name]: newValue
     }));
+    
+    // Mark that user has interacted with the form
+    if (!hasUserInteracted) {
+      setHasUserInteracted(true);
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -178,9 +220,17 @@ const CheckoutForm = () => {
     }
 
     if (!clientSecret) {
-      const errorMsg = 'Payment setup incomplete. Please refresh and try again.';
+      const errorMsg = 'Payment setup incomplete. Please ensure all required fields are filled and try again.';
       setError(errorMsg);
       setShowError(true);
+      setIsProcessing(false);
+      
+      // Try to recreate payment intent if missing
+      if (formData.email && formData.firstName && formData.lastName && 
+          formData.billingAddress && formData.billingCity && formData.billingState && formData.billingZip) {
+        console.log('Attempting to recreate payment intent...');
+        createPaymentIntentOnServer();
+      }
       return;
     }
 
@@ -572,7 +622,21 @@ const CheckoutForm = () => {
               <div className="form-group">
                 <label>Card Information *</label>
                 <div className="card-element-container">
-                  <CardElement options={cardElementOptions} />
+                  <CardElement 
+                    options={cardElementOptions}
+                    onReady={() => {
+                      console.log('CardElement ready');
+                    }}
+                    onChange={(event) => {
+                      if (event.error) {
+                        setError(event.error.message);
+                        setShowError(true);
+                      } else if (error && error.includes('card')) {
+                        setError(null);
+                        setShowError(false);
+                      }
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -644,10 +708,58 @@ const CheckoutForm = () => {
 
 // Main Checkout component with Stripe Elements provider
 const Checkout = () => {
+  const [stripeError, setStripeError] = useState(null);
   const stripePromise = getStripe();
 
+  // Validate Stripe configuration
+  useEffect(() => {
+    const validateStripe = async () => {
+      try {
+        const stripe = await stripePromise;
+        if (!stripe) {
+          setStripeError('Stripe failed to initialize. Please check your internet connection and try again.');
+        }
+      } catch (error) {
+        console.error('Stripe initialization error:', error);
+        setStripeError('Payment system unavailable. Please try again later.');
+      }
+    };
+    
+    validateStripe();
+  }, [stripePromise]);
+
+  if (stripeError) {
+    return (
+      <div className="checkout-page">
+        <div className="container">
+          <div className="error-state">
+            <h1>Payment System Error</h1>
+            <p>{stripeError}</p>
+            <Link to="/cart" className="btn">Return to Cart</Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <Elements stripe={stripePromise}>
+    <Elements 
+      stripe={stripePromise}
+      options={{
+        appearance: {
+          theme: 'stripe',
+          variables: {
+            colorPrimary: '#0570de',
+            colorBackground: '#ffffff',
+            colorText: '#30313d',
+            colorDanger: '#df1b41',
+            fontFamily: 'system-ui, sans-serif',
+            spacingUnit: '4px',
+            borderRadius: '6px'
+          }
+        }
+      }}
+    >
       <CheckoutForm />
     </Elements>
   );

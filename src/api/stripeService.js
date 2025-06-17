@@ -2,14 +2,33 @@ import { loadStripe } from '@stripe/stripe-js';
 
 // Initialize Stripe with publishable key from environment variables
 let stripePromise;
+let stripeInitializationFailed = false;
+
 export const getStripe = () => {
-  if (!stripePromise) {
+  if (!stripePromise && !stripeInitializationFailed) {
     const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || import.meta.env.STRIPE_PUBLISHABLE_KEY;
     if (!publishableKey) {
       console.error('STRIPE_PUBLISHABLE_KEY is not set (checked both VITE_STRIPE_PUBLISHABLE_KEY and STRIPE_PUBLISHABLE_KEY)');
+      stripeInitializationFailed = true;
+      return Promise.reject(new Error('Stripe configuration is missing. Please contact support.'));
     }
-    stripePromise = loadStripe(publishableKey);
+    
+    console.log('Initializing Stripe with key:', publishableKey.substring(0, 12) + '...');
+    
+    // Remove unsupported options - just pass the publishable key
+    stripePromise = loadStripe(publishableKey).catch(error => {
+      console.error('Failed to load Stripe:', error);
+      stripeInitializationFailed = true;
+      stripePromise = null; // Reset so we can try again later
+      // Return a rejected promise instead of throwing
+      return Promise.reject(new Error('Payment system failed to initialize. Please refresh the page and try again.'));
+    });
   }
+  
+  if (stripeInitializationFailed) {
+    return Promise.reject(new Error('Payment system is currently unavailable. Please refresh the page and try again.'));
+  }
+  
   return stripePromise;
 };
 
@@ -23,7 +42,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
  * @param {Object} customerInfo - Customer information
  * @returns {Promise} Payment intent client secret
  */
-export const createPaymentIntent = async (items, shippingInfo, customerInfo) => {
+export const createPaymentIntent = async (items, shippingInfo, customerInfo, retryCount = 0) => {
   // Validate input parameters
   if (!items || !Array.isArray(items) || items.length === 0) {
     throw new Error('Items array is required and cannot be empty');
@@ -33,6 +52,9 @@ export const createPaymentIntent = async (items, shippingInfo, customerInfo) => 
     throw new Error('Customer information with email is required');
   }
   
+  const maxRetries = 3;
+  const retryDelay = 1000 * (retryCount + 1); // Exponential backoff
+  
   try {
     const requestData = {
       items,
@@ -40,23 +62,65 @@ export const createPaymentIntent = async (items, shippingInfo, customerInfo) => 
       customerInfo,
     };
     
+    console.log('Creating payment intent attempt:', retryCount + 1);
+    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+    
     const response = await fetch(`${API_BASE_URL}/create-payment-intent`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(requestData),
+      signal: controller.signal
     });
+    
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      let errorMessage;
+      
+      try {
+        const errorData = JSON.parse(errorText);
+        errorMessage = errorData.error || errorText;
+      } catch {
+        errorMessage = errorText;
+      }
+      
+      throw new Error(`Payment setup failed: ${errorMessage}`);
     }
 
     const data = await response.json();
+    
+    if (!data.client_secret) {
+      throw new Error('Invalid response from payment service - missing client secret');
+    }
+    
+    console.log('Payment intent created successfully');
     return data;
   } catch (error) {
-    console.error('Error creating payment intent:', error);
+    console.error(`Error creating payment intent (attempt ${retryCount + 1}):`, error);
+    
+    // Retry logic for network errors
+    if (retryCount < maxRetries && 
+        (error.name === 'AbortError' || 
+         error.message.includes('fetch') || 
+         error.message.includes('network') ||
+         error.message.includes('timeout'))) {
+      
+      console.log(`Retrying payment intent creation in ${retryDelay}ms...`);
+      
+      await new Promise(resolve => setTimeout(resolve, retryDelay));
+      return createPaymentIntent(items, shippingInfo, customerInfo, retryCount + 1);
+    }
+    
+    // Re-throw with user-friendly message
+    if (error.name === 'AbortError') {
+      throw new Error('Request timed out. Please check your connection and try again.');
+    }
+    
     throw error;
   }
 };
@@ -71,6 +135,10 @@ export const createPaymentIntent = async (items, shippingInfo, customerInfo) => 
 export const confirmPayment = async (clientSecret, paymentMethod, billingDetails) => {
   try {
     const stripe = await getStripe();
+    
+    if (!stripe) {
+      throw new Error('Payment system is not available. Please refresh the page and try again.');
+    }
     
     const result = await stripe.confirmCardPayment(clientSecret, {
       payment_method: {
@@ -199,6 +267,11 @@ export const formatCurrency = (amount, currency = 'USD') => {
 export const validateCard = async (cardElement) => {
   try {
     const stripe = await getStripe();
+    
+    if (!stripe) {
+      return { isValid: false, error: 'Payment system is not available. Please refresh the page and try again.' };
+    }
+    
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: 'card',
       card: cardElement,
