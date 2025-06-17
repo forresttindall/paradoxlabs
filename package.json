@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
@@ -22,7 +23,6 @@
     "react-router-dom": "^7.6.2",
     "vite": "^6.3.5"
   },
-  "devDependencies": {},
   "engines": {
     "node": ">=18.0.0"
   }
