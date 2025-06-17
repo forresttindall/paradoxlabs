@@ -242,22 +242,39 @@ export default async function handler(req, res) {
       stateFormat: normalizedShipping.address.state
     });
 
-    // Create payment intent without shipping info to avoid conflicts
-    // Shipping will be handled during payment confirmation on client side
+    // Create payment intent with proper customer association for receipts
     const paymentIntentData = {
       amount: orderTotal.total,
       currency: 'usd',
+      receipt_email: customerInfo.email, // Enable automatic receipts
       metadata: {
+        // Clean metadata structure with individual fields
         customer_email: customerInfo.email,
         customer_name: customerInfo.name,
-        items: JSON.stringify(items.map(item => ({
-          id: item.id,
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price
-        }))),
+        customer_phone: customerInfo.phone || '',
+        order_subtotal: orderTotal.subtotal.toString(),
+        order_shipping: orderTotal.shipping.toString(),
+        order_tax: orderTotal.tax.toString(),
+        order_total: orderTotal.total.toString(),
+        item_count: items.length.toString(),
+        // Individual item details (first 3 items to avoid metadata limits)
+        ...items.slice(0, 3).reduce((acc, item, index) => {
+          acc[`item_${index + 1}_id`] = item.id;
+          acc[`item_${index + 1}_name`] = item.name;
+          acc[`item_${index + 1}_quantity`] = item.quantity.toString();
+          acc[`item_${index + 1}_price`] = item.price.toString();
+          return acc;
+        }, {}),
+        // Shipping details
         shipping_name: normalizedShipping.name,
-        shipping_address: JSON.stringify(normalizedShipping.address)
+        shipping_line1: normalizedShipping.address.line1,
+        shipping_city: normalizedShipping.address.city,
+        shipping_state: normalizedShipping.address.state,
+        shipping_postal_code: normalizedShipping.address.postal_code,
+        shipping_country: normalizedShipping.address.country,
+        // Order processing status
+        fulfillment_status: 'pending',
+        order_date: new Date().toISOString()
       }
     };
     

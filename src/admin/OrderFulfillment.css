@@ -1,0 +1,462 @@
+.order-fulfillment {
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--background);
+  color: var(--text);
+  padding: 100px 20px 20px;
+  font-family: "Kode Mono", monospace;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Admin Authentication */
+.admin-auth {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--background);
+  padding-top: 100px;
+}
+
+.auth-container {
+  background: var(--dark-bg);
+  border: 1px solid rgba(123, 191, 0, 0.2);
+  padding: 40px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  text-align: center;
+  min-width: 350px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.auth-container h2 {
+  margin-bottom: 30px;
+  color: var(--h1);
+  font-family: "Kode Mono", monospace;
+  font-weight: 700;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.auth-form input {
+  padding: 12px 16px;
+  background: rgba(20, 22, 24, 0.8);
+  border: 1px solid rgba(123, 191, 0, 0.3);
+  border-radius: 8px;
+  font-size: 16px;
+  color: var(--text);
+  font-family: "Kode Mono", monospace;
+  transition: all 0.3s ease;
+}
+
+.auth-form input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 15px rgba(123, 191, 0, 0.3);
+}
+
+.auth-form button {
+  padding: 12px 20px;
+  background: rgba(123, 191, 0, 0.1);
+  border: 1px solid rgba(123, 191, 0, 0.5);
+  border-radius: 8px;
+  color: var(--accent);
+  font-size: 16px;
+  font-weight: 600;
+  font-family: "Kode Mono", monospace;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.auth-form button:hover {
+  background: rgba(123, 191, 0, 0.2);
+  border-color: var(--accent);
+  box-shadow: 0 0 15px rgba(123, 191, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Admin Header */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  background: var(--dark-bg);
+  border: 1px solid rgba(123, 191, 0, 0.2);
+  padding: 20px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.admin-header h1 {
+  margin: 0;
+  color: var(--h1);
+  font-size: 28px;
+  font-family: "Kode Mono", monospace;
+  font-weight: 700;
+}
+
+.admin-controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.status-filter {
+  padding: 8px 12px;
+  background: rgba(20, 22, 24, 0.8);
+  border: 1px solid rgba(123, 191, 0, 0.3);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text);
+  font-family: "Kode Mono", monospace;
+  transition: all 0.3s ease;
+}
+
+.status-filter:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 15px rgba(123, 191, 0, 0.3);
+}
+
+.refresh-btn {
+  padding: 8px 16px;
+  background: rgba(123, 191, 0, 0.1);
+  border: 1px solid rgba(123, 191, 0, 0.5);
+  color: var(--accent);
+  font-family: "Kode Mono", monospace;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.refresh-btn:hover {
+  background: rgba(123, 191, 0, 0.2);
+  border-color: var(--accent);
+  box-shadow: 0 0 15px rgba(123, 191, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Loading and Error States */
+.loading, .error {
+  text-align: center;
+  padding: 40px;
+  background: var(--dark-bg);
+  border: 1px solid rgba(123, 191, 0, 0.2);
+  border-radius: 12px;
+  margin: 20px 0;
+  color: var(--text);
+  font-family: "Kode Mono", monospace;
+}
+
+.error {
+  color: #ff6b6b;
+  border-left: 4px solid #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+}
+
+/* Orders Table */
+.orders-table {
+  background: var(--dark-bg);
+  border: 1px solid rgba(123, 191, 0, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.orders-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.orders-table th {
+  background: rgba(20, 22, 24, 0.8);
+  padding: 15px 10px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--h1);
+  border-bottom: 2px solid rgba(123, 191, 0, 0.3);
+  font-size: 14px;
+  font-family: "Kode Mono", monospace;
+}
+
+.orders-table td {
+  padding: 15px 10px;
+  border-bottom: 1px solid rgba(123, 191, 0, 0.1);
+  vertical-align: top;
+  font-size: 13px;
+  color: var(--text);
+  font-family: "Kode Mono", monospace;
+}
+
+.orders-table tr:hover {
+  background: rgba(123, 191, 0, 0.05);
+}
+
+/* Table Cell Specific Styles */
+.order-number {
+  font-family: "Kode Mono", monospace;
+  font-weight: bold;
+  color: var(--accent);
+}
+
+.customer-info {
+  min-width: 180px;
+}
+
+.customer-name {
+  font-weight: 600;
+  color: var(--h1);
+  margin-bottom: 4px;
+}
+
+.customer-email {
+  color: #a1a1aa;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+.customer-phone {
+  color: #a1a1aa;
+  font-size: 12px;
+}
+
+.amount {
+  font-weight: 600;
+  color: var(--accent);
+  text-align: right;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  background: rgba(123, 191, 0, 0.1);
+  border: 1px solid rgba(123, 191, 0, 0.3);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: "Kode Mono", monospace;
+}
+
+.order-date {
+  color: #a1a1aa;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.items {
+  max-width: 200px;
+}
+
+.item {
+  margin-bottom: 4px;
+  padding: 2px 6px;
+  background: rgba(123, 191, 0, 0.1);
+  border: 1px solid rgba(123, 191, 0, 0.2);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.shipping-address {
+  max-width: 200px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.shipping-address div {
+  margin-bottom: 2px;
+}
+
+.tracking {
+  min-width: 120px;
+}
+
+.tracking a {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 11px;
+  transition: all 0.3s ease;
+}
+
+.tracking a:hover {
+  text-decoration: underline;
+  text-shadow: 0 0 10px rgba(123, 191, 0, 0.5);
+}
+
+.no-tracking {
+  color: #a1a1aa;
+  font-style: italic;
+  font-size: 12px;
+}
+
+/* Action Buttons */
+.actions {
+  min-width: 150px;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.action-buttons button {
+  padding: 6px 12px;
+  background: rgba(123, 191, 0, 0.1);
+  border: 1px solid rgba(123, 191, 0, 0.5);
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  font-family: "Kode Mono", monospace;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.action-buttons button:hover {
+  background: rgba(123, 191, 0, 0.2);
+  border-color: var(--accent);
+  box-shadow: 0 0 15px rgba(123, 191, 0, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-processing {
+  background: rgba(23, 162, 184, 0.1);
+  border-color: rgba(23, 162, 184, 0.5);
+  color: #17a2b8;
+}
+
+.btn-processing:hover {
+  background: rgba(23, 162, 184, 0.2);
+  border-color: #17a2b8;
+  box-shadow: 0 0 15px rgba(23, 162, 184, 0.3);
+}
+
+.btn-shipped {
+  background: rgba(123, 191, 0, 0.1);
+  border-color: rgba(123, 191, 0, 0.5);
+  color: var(--accent);
+}
+
+.btn-shipped:hover {
+  background: rgba(123, 191, 0, 0.2);
+  border-color: var(--accent);
+  box-shadow: 0 0 15px rgba(123, 191, 0, 0.3);
+}
+
+.btn-delivered {
+  background: rgba(111, 66, 193, 0.1);
+  border-color: rgba(111, 66, 193, 0.5);
+  color: #6f42c1;
+}
+
+.btn-delivered:hover {
+  background: rgba(111, 66, 193, 0.2);
+  border-color: #6f42c1;
+  box-shadow: 0 0 15px rgba(111, 66, 193, 0.3);
+}
+
+.btn-cancelled {
+  background: rgba(220, 53, 69, 0.1);
+  border-color: rgba(220, 53, 69, 0.5);
+  color: #dc3545;
+}
+
+.btn-cancelled:hover {
+  background: rgba(220, 53, 69, 0.2);
+  border-color: #dc3545;
+  box-shadow: 0 0 15px rgba(220, 53, 69, 0.3);
+}
+
+/* No Orders State */
+.no-orders {
+  text-align: center;
+  padding: 60px 20px;
+  color: #a1a1aa;
+  font-style: italic;
+  font-family: "Kode Mono", monospace;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .orders-table {
+    overflow-x: auto;
+  }
+  
+  .orders-table table {
+    min-width: 1000px;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-header {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+  
+  .admin-controls {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .status-filter,
+  .refresh-btn {
+    width: 100%;
+  }
+  
+  .container {
+    padding: 0 10px;
+  }
+  
+  .orders-table th,
+  .orders-table td {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+  
+  .action-buttons {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .action-buttons button {
+    flex: 1;
+    min-width: 70px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .admin-controls,
+  .actions {
+    display: none;
+  }
+  
+  .orders-table {
+    box-shadow: none;
+  }
+  
+  .orders-table th,
+  .orders-table td {
+    border: 1px solid #000;
+    padding: 8px;
+  }
+}
