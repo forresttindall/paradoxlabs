@@ -322,10 +322,14 @@ const CheckoutForm = () => {
 
 
       if (stripeError) {
+        console.error('Stripe payment error:', stripeError);
         setError(stripeError.message);
         setShowError(true);
         setIsProcessing(false);
       } else if (paymentIntent.status === 'succeeded') {
+        console.log('Payment succeeded! PaymentIntent:', paymentIntent);
+        console.log('Cart items before clearing:', cartItems);
+        
         // Payment succeeded - prepare order details before clearing cart
         const orderDetails = {
           orderNumber: paymentIntent.id,
@@ -358,16 +362,34 @@ const CheckoutForm = () => {
           },
         };
         
-        // Clear cart after successful payment
-        clearCart();
+        console.log('Order details prepared:', orderDetails);
         
-        // Navigate to success page with order details
-        navigate('/OrderConfirmation', {
-          state: {
-            orderDetails: orderDetails,
-          },
-          replace: true // Prevent going back to checkout
-        });
+        // Navigate to success page with order details BEFORE clearing cart
+        console.log('Attempting to navigate to OrderConfirmation...');
+        try {
+          navigate('/OrderConfirmation', {
+            state: {
+              orderDetails: orderDetails,
+            },
+            replace: true // Prevent going back to checkout
+          });
+          console.log('Navigation call completed');
+          
+          // Clear cart after navigation to prevent race conditions
+          setTimeout(() => {
+            clearCart();
+            console.log('Cart cleared after navigation');
+          }, 100);
+        } catch (navError) {
+          console.error('Navigation error:', navError);
+          // Still clear cart even if navigation fails
+          clearCart();
+        }
+      } else {
+        console.log('Payment status:', paymentIntent.status);
+        setError('Payment was not completed successfully. Please try again.');
+        setShowError(true);
+        setIsProcessing(false);
       }
     } catch (error) {
       setError('An unexpected error occurred. Please try again.');

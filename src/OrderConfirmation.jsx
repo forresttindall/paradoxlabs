@@ -11,9 +11,20 @@ const OrderConfirmation = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     
+    console.log('OrderConfirmation mounted');
+    console.log('Location state:', location.state);
+    console.log('Full location object:', location);
+    
     // Get order details from navigation state
     if (location.state && location.state.orderDetails) {
+      console.log('Order details found:', location.state.orderDetails);
       setOrderDetails(location.state.orderDetails);
+    } else {
+      console.log('No order details found in location state');
+      console.log('Location.state exists:', !!location.state);
+      if (location.state) {
+        console.log('Available keys in location.state:', Object.keys(location.state));
+      }
     }
   }, [location]);
   
