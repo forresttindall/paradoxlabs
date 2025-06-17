@@ -13,7 +13,7 @@ export const getStripe = () => {
       return Promise.reject(new Error('Stripe configuration is missing. Please contact support.'));
     }
     
-    console.log('Initializing Stripe with key:', publishableKey.substring(0, 12) + '...');
+    // Stripe initialization - key logging removed for security
     
     // Remove unsupported options - just pass the publishable key
     stripePromise = loadStripe(publishableKey).catch(error => {

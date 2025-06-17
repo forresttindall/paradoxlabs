@@ -233,7 +233,8 @@ export default async function handler(req, res) {
       stateFormat: normalizedShipping.address.state
     });
 
-    // Create payment intent
+    // Create payment intent without shipping info to avoid conflicts
+    // Shipping will be handled during payment confirmation on client side
     const paymentIntentData = {
       amount: orderTotal.total,
       currency: 'usd',
@@ -245,9 +246,10 @@ export default async function handler(req, res) {
           name: item.name,
           quantity: item.quantity,
           price: item.price
-        })))
-      },
-      shipping: normalizedShipping
+        }))),
+        shipping_name: normalizedShipping.name,
+        shipping_address: JSON.stringify(normalizedShipping.address)
+      }
     };
     
     debugAPI.log('CREATING_PAYMENT_INTENT', {
@@ -256,7 +258,7 @@ export default async function handler(req, res) {
       customerEmail: '***@***.***',
       customerName: customerInfo.name,
       itemCount: items.length,
-      hasShippingInfo: !!shippingInfo.name
+      shippingInMetadata: true
     });
     
     const paymentIntent = await stripe.paymentIntents.create(paymentIntentData);
