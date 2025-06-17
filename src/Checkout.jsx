@@ -101,12 +101,12 @@ const CheckoutForm = () => {
     }
   }, [cartItems, navigate]);
 
-  // Create payment intent when component mounts
+  // Create payment intent when email is provided
   useEffect(() => {
-    if (cartItems.length > 0) {
+    if (cartItems.length > 0 && formData.email && formData.email.includes('@')) {
       createPaymentIntentOnServer();
     }
-  }, [cartItems, orderTotal]);
+  }, [cartItems, orderTotal, formData.email]);
 
   const createPaymentIntentOnServer = async () => {
     try {
@@ -215,6 +215,28 @@ const CheckoutForm = () => {
     setError(null);
     setShowError(false);
 
+    // Validate required fields
+    if (!formData.email || !formData.email.includes('@')) {
+      setError('Please enter a valid email address.');
+      setShowError(true);
+      setIsProcessing(false);
+      return;
+    }
+    
+    if (!formData.firstName || !formData.lastName) {
+      setError('Please enter your first and last name.');
+      setShowError(true);
+      setIsProcessing(false);
+      return;
+    }
+    
+    if (!formData.billingAddress || !formData.billingCity || !formData.billingState || !formData.billingZip) {
+      setError('Please complete all billing address fields.');
+      setShowError(true);
+      setIsProcessing(false);
+      return;
+    }
+    
     // Validate credit card fields
     if (!formData.cardNumber || !formData.expiryDate || !formData.cvv) {
       setError('Please complete all credit card fields.');
