@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Elements, useStripe, useElements } from '@stripe/react-stripe-js';
+import { Elements, useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { CartContext } from './CartContext';
 import { createPaymentIntent, calculateOrderTotal, formatCurrency, getStripe } from './api/stripeService';
 import './Checkout.css';
@@ -14,15 +14,13 @@ const cardElementOptions = {
   style: {
     base: {
       fontSize: '16px',
-      color: '#e5e5e5',
-      backgroundColor: '#141618',
+      color: '#424770',
       '::placeholder': {
-        color: '#a1a1aa',
+        color: '#aab7c4',
       },
     },
     invalid: {
-      color: '#ff6b6b',
-      iconColor: '#ff6b6b',
+      color: '#9e2146',
     },
   },
   hidePostalCode: false,
@@ -76,9 +74,6 @@ const CheckoutForm = () => {
     shippingCountry: 'US',
     
     // Credit Card Information
-    cardNumber: '',
-    expiryDate: '',
-    cvv: '',
     cardholderName: '',
     
     // Additional Options
@@ -157,48 +152,11 @@ const CheckoutForm = () => {
     }
   };
 
-  // Format credit card number with spaces
-  const formatCardNumber = (value) => {
-    const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-    const matches = v.match(/\d{4,16}/g);
-    const match = matches && matches[0] || '';
-    const parts = [];
-    for (let i = 0, len = match.length; i < len; i += 4) {
-      parts.push(match.substring(i, i + 4));
-    }
-    if (parts.length) {
-      return parts.join(' ');
-    } else {
-      return v;
-    }
-  };
 
-  // Format expiry date as MM/YY
-  const formatExpiryDate = (value) => {
-    const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-    if (v.length >= 2) {
-      return v.substring(0, 2) + (v.length > 2 ? '/' + v.substring(2, 4) : '');
-    }
-    return v;
-  };
-
-  // Format CVV (numbers only)
-  const formatCVV = (value) => {
-    return value.replace(/[^0-9]/gi, '');
-  };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    let newValue = type === 'checkbox' ? checked : value;
-    
-    // Apply formatting for credit card fields
-    if (name === 'cardNumber') {
-      newValue = formatCardNumber(value);
-    } else if (name === 'expiryDate') {
-      newValue = formatExpiryDate(value);
-    } else if (name === 'cvv') {
-      newValue = formatCVV(value);
-    }
+    const newValue = type === 'checkbox' ? checked : value;
     
     setFormData(prev => ({
       ...prev,
@@ -252,9 +210,10 @@ const CheckoutForm = () => {
       return;
     }
     
-    // Validate credit card fields
-    if (!formData.cardNumber || !formData.expiryDate || !formData.cvv) {
-      setError('Please complete all credit card fields.');
+    // Get card element
+    const cardElement = elements.getElement(CardElement);
+    if (!cardElement) {
+      setError('Card information is required.');
       setShowError(true);
       setIsProcessing(false);
       return;
@@ -289,15 +248,10 @@ const CheckoutForm = () => {
 
 
     try {
-      // Create payment method with card details
+      // Create payment method with card element
       const { error: paymentMethodError, paymentMethod } = await stripe.createPaymentMethod({
         type: 'card',
-        card: {
-          number: formData.cardNumber.replace(/\s/g, ''),
-          exp_month: parseInt(formData.expiryDate.split('/')[0]),
-          exp_year: parseInt('20' + formData.expiryDate.split('/')[1]),
-          cvc: formData.cvv,
-        },
+        card: cardElement,
         billing_details: billingDetails,
       });
       
@@ -616,47 +570,9 @@ const CheckoutForm = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="cardNumber">Card Number *</label>
-                <input
-                  type="text"
-                  id="cardNumber"
-                  name="cardNumber"
-                  value={formData.cardNumber}
-                  onChange={handleInputChange}
-                  autoComplete="cc-number"
-                  placeholder="1234 5678 9012 3456"
-                  maxLength="19"
-                  required
-                />
-              </div>
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="expiryDate">Expiry Date *</label>
-                  <input
-                    type="text"
-                    id="expiryDate"
-                    name="expiryDate"
-                    value={formData.expiryDate}
-                    onChange={handleInputChange}
-                    autoComplete="cc-exp"
-                    placeholder="MM/YY"
-                    maxLength="5"
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="cvv">CVV *</label>
-                  <input
-                    type="text"
-                    id="cvv"
-                    name="cvv"
-                    value={formData.cvv}
-                    onChange={handleInputChange}
-                    autoComplete="cc-csc"
-                    placeholder="123"
-                    maxLength="4"
-                    required
-                  />
+                <label>Card Information *</label>
+                <div className="card-element-container">
+                  <CardElement options={cardElementOptions} />
                 </div>
               </div>
             </div>
