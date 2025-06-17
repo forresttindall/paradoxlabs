@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './HeroSection.css';
 import './App.css';
 
@@ -30,7 +31,7 @@ function HeroSection() {
                         <h1 className="h1">Paradox Labs</h1>
                     </div>
                     <p className="p">Leading-Edge Technology & Covert Tools</p>
-                    <a href="/shop" className="btn">Shop Now</a>
+                    <Link to="/Shop" className="btn">Shop Now</Link>
                 </div>
             </section>
             
