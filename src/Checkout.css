@@ -6,7 +6,11 @@
   max-width: 1200px;
   margin: 0 auto;
 }
-
+@media (max-width: 768px) {
+  .checkout-page {
+       padding: 100px 20px 60px 20px;
+     }
+  }
 .checkout-title {
   font-size: 2.5rem;
   font-weight: 700;
@@ -225,11 +229,11 @@
   text-align: center;
 }
 
-.order-items {
+.checkout-order-items {
   margin-bottom: 2rem;
 }
 
-.order-item {
+.checkout-order-item {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -238,29 +242,29 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.order-item:last-child {
+.checkout-order-item:last-child {
   border-bottom: none;
 }
 
-.order-item .item-image {
-  width: 60px;
-  height: 60px;
+.checkout-order-item .checkout-item-image {
+  width: 100px;
+  height: 100px;
   border-radius: 8px;
   overflow: hidden;
   flex-shrink: 0;
 }
 
-.order-item .item-image img {
+.checkout-order-item .checkout-item-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.order-item .item-details {
+.checkout-order-item .checkout-item-details {
   flex: 1;
 }
 
-.order-item .item-details h4 {
+.checkout-order-item .checkout-item-details h4 {
   color: var(--h1);
   font-size: 0.9rem;
   font-weight: 600;
@@ -268,13 +272,13 @@
   font-family: 'Kode Mono', monospace;
 }
 
-.order-item .item-details p {
+.checkout-order-item .checkout-item-details p {
   color: var(--text);
   font-size: 0.8rem;
   font-family: 'Kode Mono', monospace;
 }
 
-.order-item .item-price {
+.checkout-order-item .checkout-item-price {
   color: var(--accent);
   font-weight: 600;
   font-family: 'Kode Mono', monospace;
@@ -434,28 +438,44 @@
     font-size: 16px; /* Prevents zoom on iOS */
   }
   
-  .order-item {
-    flex-direction: row;
+  .order-summary .checkout-order-item {
+    display: grid !important;
+    grid-template-columns: 70px 1fr 80px !important;
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem 0;
+    flex-direction: unset !important;
   }
   
-  .order-item .item-image {
-    width: 50px;
-    height: 50px;
+  .order-summary .checkout-order-item .checkout-item-image {
+    width: 70px !important;
+    height: 70px !important;
   }
   
-  .order-item .item-details h4 {
+  .order-summary .checkout-order-item .checkout-item-details {
+    min-width: 0;
+    padding-right: 0.5rem;
+  }
+  
+  .order-summary .checkout-order-item .checkout-item-details h4 {
     font-size: 0.85rem;
+    margin-bottom: 0.2rem;
+    word-wrap: break-word;
+    line-height: 1.2;
   }
   
-  .order-item .item-details p {
+  .order-summary .checkout-order-item .checkout-item-details p {
     font-size: 0.75rem;
+    margin: 0;
+    line-height: 1.1;
   }
   
-  .order-item .item-price {
+  .order-summary .checkout-order-item .checkout-item-price {
     font-size: 0.85rem;
+    text-align: right;
+    white-space: nowrap;
+    justify-self: end;
+    font-weight: 600;
   }
   
   .total-row {

@@ -5,6 +5,12 @@
   min-height: 100vh;
 }
 
+@media (max-width: 768px) {
+  .about-page {
+       padding: 100px 20px 60px 20px;
+     }
+  }
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -111,9 +117,6 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .about-page {
-    padding: 60px 15px;
-  }
   
   .about-header h1 {
     font-size: 2.5rem;
@@ -127,6 +130,14 @@
     grid-template-columns: 1fr;
     gap: 2rem;
     margin-bottom: 3rem;
+  }
+  
+  .about-section:first-of-type .about-image {
+    order: 1;
+  }
+  
+  .about-section:first-of-type .about-text {
+    order: 2;
   }
   
   .about-section.reverse {

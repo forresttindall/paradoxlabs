@@ -74,20 +74,20 @@
 
 .privacy-section li::before {
   content: "▸";
-  color: var(--accent);
+  color: #AAFF1D;
   font-weight: bold;
   position: absolute;
   left: -1.2rem;
 }
 
 .privacy-section a {
-  color: var(--accent);
+  color: #AAFF1D;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .privacy-section a:hover {
-  color: var(--accent-hover);
+  color: #AAFF1D;
   text-decoration: underline;
 }
 
@@ -99,7 +99,7 @@
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .privacy-page {
-    padding: 60px 15px;
+    padding: 100px 20px 60px 20px;
   }
   
   .privacy-header h1 {
@@ -125,20 +125,3 @@
   }
 }
 
-@media (max-width: 480px) {
-  .privacy-page {
-    padding: 40px 10px;
-  }
-  
-  .privacy-header h1 {
-    font-size: 1.8rem;
-  }
-  
-  .privacy-section {
-    padding: 1rem;
-  }
-  
-  .privacy-section h2 {
-    font-size: 1.4rem;
-  }
-}

@@ -645,17 +645,17 @@ const CheckoutForm = () => {
           <div className="order-summary">
             <h3>Order Summary</h3>
             
-            <div className="order-items">
+            <div className="checkout-order-items">
               {cartItems.map((item) => (
-                <div key={item.id} className="order-item">
-                  <div className="item-image">
+                <div key={item.id} className="checkout-order-item">
+                  <div className="checkout-item-image">
                     <img src={item.image} alt={item.name} />
                   </div>
-                  <div className="item-details">
+                  <div className="checkout-item-details">
                     <h4>{item.name}</h4>
                     <p>Qty: {item.quantity}</p>
                   </div>
-                  <div className="item-price">
+                  <div className="checkout-item-price">
                     {formatCurrency(item.price * item.quantity)}
                   </div>
                 </div>

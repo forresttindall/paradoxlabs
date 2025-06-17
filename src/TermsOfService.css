@@ -74,7 +74,7 @@
 
 .terms-section li::before {
   content: "▸";
-  color: var(--text);
+  color: #AAFF1D;
   font-weight: bold;
   position: absolute;
   left: -1.2rem;
@@ -116,7 +116,7 @@
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .terms-page {
-    padding: 60px 15px;
+    padding: 100px 20px 60px 20px;
   }
   
   .terms-header h1 {
@@ -142,20 +142,3 @@
   }
 }
 
-@media (max-width: 480px) {
-  .terms-page {
-    padding: 40px 10px;
-  }
-  
-  .terms-header h1 {
-    font-size: 1.8rem;
-  }
-  
-  .terms-section {
-    padding: 1rem;
-  }
-  
-  .terms-section h2 {
-    font-size: 1.4rem;
-  }
-}
