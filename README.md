@@ -24,11 +24,14 @@ A modern e-commerce website built with React and Vite, designed for serverless d
 Create a `.env` file in the root directory with the following variables:
 
 ```env
-REACT_APP_SENDER_API_KEY=your_sender_api_key_here
-REACT_APP_SENDER_GROUP_ID=your_group_id_here
-REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_live_...
-REACT_APP_STRIPE_SECRET_KEY=sk_live_...
-REACT_APP_API_URL=/api
+VITE_SENDER_API_KEY=your_sender_api_key_here
+VITE_SENDER_GROUP_ID=your_group_id_here
+VITE_STRIPE_PUBLISHABLE_KEY=pk_live_...
+VITE_STRIPE_SECRET_KEY=sk_live_...
+VITE_API_URL=/api
+VITE_EMAILJS_SERVICE_ID=your_service_id
+VITE_EMAILJS_TEMPLATE_ID=your_template_id
+VITE_EMAILJS_PUBLIC_KEY=your_public_key
 ```
 
 ## Local Development
@@ -144,11 +147,14 @@ Paradox Labs is a forward-thinking technology company that specializes in creati
 Create a `.env` file in the root directory with the following variables:
 
 ```env
-REACT_APP_EMAILJS_SERVICE_ID=your_service_id
-REACT_APP_EMAILJS_TEMPLATE_ID=your_template_id
-REACT_APP_EMAILJS_PUBLIC_KEY=your_public_key
-REACT_APP_SENDER_API_KEY=your_sender_api_key
-REACT_APP_SENDER_GROUP_ID=your_group_id
+VITE_EMAILJS_SERVICE_ID=your_service_id
+VITE_EMAILJS_TEMPLATE_ID=your_template_id
+VITE_EMAILJS_PUBLIC_KEY=your_public_key
+VITE_SENDER_API_KEY=your_sender_api_key
+VITE_SENDER_GROUP_ID=your_group_id
+VITE_STRIPE_PUBLISHABLE_KEY=pk_live_...
+VITE_STRIPE_SECRET_KEY=sk_live_...
+VITE_API_URL=/api
 ```
 
 ## Project Structure
