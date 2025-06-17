@@ -362,7 +362,7 @@ const CheckoutForm = () => {
         clearCart();
         
         // Navigate to success page with order details
-        navigate('/order-confirmation', {
+        navigate('/OrderConfirmation', {
           state: {
             orderDetails: orderDetails,
           },
