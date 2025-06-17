@@ -4,16 +4,17 @@ import { loadStripe } from '@stripe/stripe-js';
 let stripePromise;
 export const getStripe = () => {
   if (!stripePromise) {
-    if (!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY) {
-      console.error('VITE_STRIPE_PUBLISHABLE_KEY is not set');
+    const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || import.meta.env.STRIPE_PUBLISHABLE_KEY;
+    if (!publishableKey) {
+      console.error('STRIPE_PUBLISHABLE_KEY is not set (checked both VITE_STRIPE_PUBLISHABLE_KEY and STRIPE_PUBLISHABLE_KEY)');
     }
-    stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+    stripePromise = loadStripe(publishableKey);
   }
   return stripePromise;
 };
 
 // API base URL - adjust based on your backend setup
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5174/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 /**
  * Create a payment intent on the server

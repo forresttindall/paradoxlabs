@@ -30,7 +30,7 @@ function HeroSection() {
                         <h1 className="h1">Paradox Labs</h1>
                     </div>
                     <p className="p">Leading-Edge Technology & Covert Tools</p>
-                    <a href="/Shop" className="btn">Shop Now</a>
+                    <a href="/shop" className="btn">Shop Now</a>
                 </div>
             </section>
             
