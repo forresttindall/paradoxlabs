@@ -20,7 +20,7 @@ const Footer = () => {
             />
             <h3 className="footer-logo">Paradox Labs</h3>
           </div>
-          <p className="footer-tagline">Leading-Edge Tech, Covert Tools, & Cyber Gadgets</p>
+          <p className="footer-tagline">Leading-Edge Technology, & Covert Tools</p>
         </div>
         
         <div className="footer-links">
