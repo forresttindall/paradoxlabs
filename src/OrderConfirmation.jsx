@@ -2,68 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './OrderConfirmation.css';
 
-// Debug utility for order confirmation operations
-const debugOrderConfirmation = {
-  log: (action, data) => {
-    console.group(`✅ ORDER CONFIRMATION DEBUG: ${action}`);
-    console.log('Timestamp:', new Date().toISOString());
-    console.log('Data:', data);
-    console.groupEnd();
-  },
-  error: (action, error) => {
-    console.group(`❌ ORDER CONFIRMATION ERROR: ${action}`);
-    console.error('Timestamp:', new Date().toISOString());
-    console.error('Error:', error);
-    console.groupEnd();
-  },
-  orderData: (orderDetails) => {
-    console.group('📋 ORDER DATA');
-    console.log('Order details:', {
-      orderNumber: orderDetails?.orderNumber,
-      orderDate: orderDetails?.orderDate,
-      email: orderDetails?.email ? '***@***.***' : 'missing',
-      itemCount: orderDetails?.items?.length,
-      total: orderDetails?.total,
-      hasShippingAddress: !!orderDetails?.shippingAddress
-    });
-    console.groupEnd();
-  }
-};
+
 
 const OrderConfirmation = () => {
   const location = useLocation();
   const [orderDetails, setOrderDetails] = useState(null);
 
   useEffect(() => {
-    debugOrderConfirmation.log('ORDER_CONFIRMATION_PAGE_LOADED', {
-      hasLocationState: !!location.state,
-      hasOrderDetails: !!(location.state && location.state.orderDetails),
-      pathname: location.pathname,
-      search: location.search
-    });
-    
     window.scrollTo(0, 0);
     
     // Get order details from navigation state
     if (location.state && location.state.orderDetails) {
-      debugOrderConfirmation.log('ORDER_DETAILS_FOUND', 'Order details retrieved from navigation state');
       setOrderDetails(location.state.orderDetails);
-      debugOrderConfirmation.orderData(location.state.orderDetails);
-    } else {
-      debugOrderConfirmation.error('NO_ORDER_DETAILS', 'No order details found in navigation state');
     }
   }, [location]);
   
-  // Debug state changes
-  useEffect(() => {
-    if (orderDetails) {
-      debugOrderConfirmation.log('ORDER_DETAILS_SET', {
-        orderNumber: orderDetails.orderNumber,
-        itemCount: orderDetails.items?.length,
-        total: orderDetails.total
-      });
-    }
-  }, [orderDetails]);
+
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {

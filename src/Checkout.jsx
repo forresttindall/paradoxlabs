@@ -7,37 +7,7 @@ import './Checkout.css';
 
 import './OrderConfirmation.css';
 
-// Debug utility for checkout operations
-const debugCheckout = {
-  log: (action, data) => {
-    console.group(`🛍️ CHECKOUT DEBUG: ${action}`);
-    console.log('Timestamp:', new Date().toISOString());
-    console.log('Data:', data);
-    console.groupEnd();
-  },
-  error: (action, error) => {
-    console.group(`❌ CHECKOUT ERROR: ${action}`);
-    console.error('Timestamp:', new Date().toISOString());
-    console.error('Error:', error);
-    console.groupEnd();
-  },
-  formState: (formData) => {
-    console.group('📝 FORM STATE');
-    console.log('Form data:', {
-      ...formData,
-      // Don't log sensitive data in production
-      email: formData.email ? '***@***.***' : '',
-      phone: formData.phone ? '***-***-****' : ''
-    });
-    console.groupEnd();
-  },
-  payment: (action, data) => {
-    console.group(`💳 PAYMENT: ${action}`);
-    console.log('Timestamp:', new Date().toISOString());
-    console.log('Data:', data);
-    console.groupEnd();
-  }
-};
+
 
 // Card element styling
 const cardElementOptions = {
@@ -72,26 +42,13 @@ const CheckoutForm = () => {
   const [clientSecret, setClientSecret] = useState('');
   const [orderTotal, setOrderTotal] = useState(null);
   
-  // Debug component initialization
+
   useEffect(() => {
-    debugCheckout.log('CHECKOUT_COMPONENT_INITIALIZED', {
-      hasStripe: !!stripe,
-      hasElements: !!elements,
-      cartItemCount: cartItems.length,
-      cartItems: cartItems
-    });
-  }, [stripe, elements, cartItems]);
+    window.scrollTo(0, 0);
+  }, []);
+
   
-  // Debug state changes
-  useEffect(() => {
-    debugCheckout.log('CHECKOUT_STATE_CHANGE', {
-      isProcessing,
-      hasError: !!error,
-      errorMessage: error,
-      hasClientSecret: !!clientSecret,
-      hasOrderTotal: !!orderTotal
-    });
-  }, [isProcessing, error, clientSecret, orderTotal]);
+
   
   // Form state
   const [formData, setFormData] = useState({
@@ -152,16 +109,8 @@ const CheckoutForm = () => {
   }, [cartItems, orderTotal]);
 
   const createPaymentIntentOnServer = async () => {
-    debugCheckout.payment('CREATE_PAYMENT_INTENT_STARTED', {
-      cartItemCount: cartItems.length,
-      hasFormData: !!formData,
-      hasEmail: !!formData.email,
-      hasName: !!(formData.firstName && formData.lastName)
-    });
-    
     try {
       setIsProcessing(true);
-      debugCheckout.log('SETTING_PROCESSING_STATE', { isProcessing: true });
       
       const shippingInfo = {
         address: formData.sameAsShipping ? formData.billingAddress : formData.shippingAddress,
@@ -177,33 +126,11 @@ const CheckoutForm = () => {
         phone: formData.phone,
       };
       
-      debugCheckout.payment('PAYMENT_INTENT_DATA_PREPARED', {
-        shippingInfo: shippingInfo,
-        customerInfo: {
-          ...customerInfo,
-          email: '***@***.***',
-          phone: '***-***-****'
-        },
-        cartItems: cartItems.map(item => ({
-          id: item.id,
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price
-        }))
-      });
-
       const response = await createPaymentIntent(cartItems, shippingInfo, customerInfo);
       
-      debugCheckout.payment('PAYMENT_INTENT_RESPONSE_RECEIVED', {
-        hasClientSecret: !!response.clientSecret,
-        hasOrderTotal: !!response.order_total
-      });
-      
       setClientSecret(response.client_secret);
-      debugCheckout.payment('CLIENT_SECRET_SET', { clientSecretLength: response.client_secret?.length });
       
     } catch (error) {
-      debugCheckout.error('CREATE_PAYMENT_INTENT_ERROR', error);
       console.error('Error creating payment intent:', error);
       setError('Failed to initialize payment. Please try again.');
       // Only show error if user has interacted with the form
@@ -212,7 +139,6 @@ const CheckoutForm = () => {
       }
     } finally {
       setIsProcessing(false);
-      debugCheckout.log('SETTING_PROCESSING_STATE', { isProcessing: false });
     }
   };
 
@@ -259,22 +185,10 @@ const CheckoutForm = () => {
       newValue = formatCVV(value);
     }
     
-    debugCheckout.log('FORM_INPUT_CHANGE', {
-      fieldName: name,
-      fieldType: type,
-      newValue: name.includes('email') || name.includes('phone') || name.includes('card') ? '***' : newValue,
-      isCheckbox: type === 'checkbox'
-    });
-    
-    setFormData(prev => {
-      const updatedFormData = {
-        ...prev,
-        [name]: newValue
-      };
-      
-      debugCheckout.formState(updatedFormData);
-      return updatedFormData;
-    });
+    setFormData(prev => ({
+      ...prev,
+      [name]: newValue
+    }));
   };
 
   const handleSubmit = async (event) => {
@@ -282,17 +196,9 @@ const CheckoutForm = () => {
     
     // Mark that user has interacted with the form
     setHasUserInteracted(true);
-    
-    debugCheckout.payment('FORM_SUBMIT_INITIATED', {
-      hasStripe: !!stripe,
-      hasElements: !!elements,
-      hasClientSecret: !!clientSecret,
-      isProcessing: isProcessing
-    });
 
     if (!stripe || !elements) {
       const errorMsg = 'Stripe has not loaded yet. Please try again.';
-      debugCheckout.error('STRIPE_NOT_LOADED', errorMsg);
       setError(errorMsg);
       setShowError(true);
       return;
@@ -300,7 +206,6 @@ const CheckoutForm = () => {
 
     if (!clientSecret) {
       const errorMsg = 'Payment setup incomplete. Please refresh and try again.';
-      debugCheckout.error('NO_CLIENT_SECRET', errorMsg);
       setError(errorMsg);
       setShowError(true);
       return;
@@ -309,11 +214,9 @@ const CheckoutForm = () => {
     setIsProcessing(true);
     setError(null);
     setShowError(false);
-    debugCheckout.payment('PAYMENT_PROCESSING_STARTED', { clientSecretLength: clientSecret.length });
 
     // Validate credit card fields
     if (!formData.cardNumber || !formData.expiryDate || !formData.cvv) {
-      debugCheckout.error('CARD_FIELDS_INCOMPLETE', 'Credit card information is incomplete');
       setError('Please complete all credit card fields.');
       setShowError(true);
       setIsProcessing(false);
@@ -346,13 +249,7 @@ const CheckoutForm = () => {
       },
     };
     
-    debugCheckout.payment('PAYMENT_DETAILS_PREPARED', {
-      hasBillingDetails: !!billingDetails,
-      hasShippingDetails: !!shippingDetails,
-      sameAsShipping: formData.sameAsShipping,
-      billingName: billingDetails.name,
-      shippingName: shippingDetails.name
-    });
+
 
     try {
       // Create payment method with card details
@@ -368,7 +265,6 @@ const CheckoutForm = () => {
       });
       
       if (paymentMethodError) {
-        debugCheckout.error('PAYMENT_METHOD_ERROR', paymentMethodError);
         setError(paymentMethodError.message);
         setShowError(true);
         setIsProcessing(false);
@@ -376,36 +272,20 @@ const CheckoutForm = () => {
       }
       
       // Confirm payment with Stripe
-      debugCheckout.payment('CONFIRMING_CARD_PAYMENT', 'Starting Stripe payment confirmation');
       
       const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: paymentMethod.id,
         shipping: shippingDetails,
       });
       
-      debugCheckout.payment('STRIPE_PAYMENT_RESPONSE', {
-        hasError: !!stripeError,
-        errorType: stripeError?.type,
-        errorCode: stripeError?.code,
-        errorMessage: stripeError?.message,
-        paymentIntentStatus: paymentIntent?.status,
-        paymentIntentId: paymentIntent?.id
-      });
+
 
       if (stripeError) {
-        debugCheckout.error('STRIPE_PAYMENT_ERROR', stripeError);
         setError(stripeError.message);
         setShowError(true);
         setIsProcessing(false);
       } else if (paymentIntent.status === 'succeeded') {
         // Payment succeeded
-        debugCheckout.payment('PAYMENT_SUCCESS', {
-          paymentIntentId: paymentIntent.id,
-          status: paymentIntent.status,
-          amount: paymentIntent.amount
-        });
-        
-        debugCheckout.log('CLEARING_CART', 'Payment successful, clearing cart');
         clearCart();
         
         const orderDetails = {
@@ -431,12 +311,6 @@ const CheckoutForm = () => {
           },
         };
         
-        debugCheckout.log('NAVIGATING_TO_CONFIRMATION', {
-          orderNumber: orderDetails.orderNumber,
-          itemCount: orderDetails.items.length,
-          total: orderDetails.total
-        });
-        
         // Navigate to success page with order details
         navigate('/order-confirmation', {
           state: {
@@ -445,7 +319,6 @@ const CheckoutForm = () => {
         });
       }
     } catch (error) {
-      debugCheckout.error('PAYMENT_PROCESSING_EXCEPTION', error);
       setError('An unexpected error occurred. Please try again.');
       setShowError(true);
       setIsProcessing(false);

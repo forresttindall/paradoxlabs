@@ -80,6 +80,24 @@
   box-shadow: 0 0 15px rgba(123, 191, 0, 0.3);
 }
 
+/* Prevent autofill from turning inputs white */
+.form-input:-webkit-autofill,
+.form-input:-webkit-autofill:hover,
+.form-input:-webkit-autofill:focus,
+.form-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--dark-bg) inset !important;
+  -webkit-text-fill-color: var(--text) !important;
+  border: 1px solid rgba(123, 191, 0, 0.3) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.form-input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 30px var(--dark-bg) inset !important;
+  -webkit-text-fill-color: var(--text) !important;
+  border-color: #7bbf00 !important;
+  box-shadow: 0 0 15px rgba(123, 191, 0, 0.3) !important;
+}
+
 .form-textarea {
   min-height: 120px;
   resize: vertical;

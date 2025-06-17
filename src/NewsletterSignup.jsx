@@ -41,7 +41,7 @@ const NewsletterSignup = () => {
 
       if (response.ok) {
         setIsSuccess(true);
-        setMessage('Thank you for subscribing! Please check your email to confirm your subscription.');
+        setMessage('Thank you for subscribing!');
         setFormData({ firstName: '', email: '' });
       } else {
         const errorData = await response.json();
@@ -106,8 +106,8 @@ const NewsletterSignup = () => {
         
         <div className="privacy-notice">
           <p>
-            <strong>Privacy Promise:</strong> We respect your privacy and will never sell, 
-            distribute, or share your personal information with third parties. 
+            <strong>Privacy Promise:</strong> We will never sell, 
+            distribute, or share your personal information. 
             You can unsubscribe at any time.
           </p>
         </div>

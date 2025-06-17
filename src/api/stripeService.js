@@ -1,38 +1,11 @@
 import { loadStripe } from '@stripe/stripe-js';
 
-// Debug utility for Stripe operations
-const debugStripe = {
-  log: (action, data) => {
-    console.group(`💳 STRIPE DEBUG: ${action}`);
-    console.log('Timestamp:', new Date().toISOString());
-    console.log('Data:', data);
-    console.groupEnd();
-  },
-  error: (action, error) => {
-    console.group(`❌ STRIPE ERROR: ${action}`);
-    console.error('Timestamp:', new Date().toISOString());
-    console.error('Error:', error);
-    console.groupEnd();
-  },
-  api: (method, url, data) => {
-    console.group(`🌐 STRIPE API: ${method} ${url}`);
-    console.log('Timestamp:', new Date().toISOString());
-    console.log('Request data:', data);
-    console.groupEnd();
-  }
-};
-
 // Initialize Stripe with publishable key from environment variables
 let stripePromise;
 export const getStripe = () => {
-  debugStripe.log('INITIALIZING_STRIPE', {
-    hasPublishableKey: !!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
-    keyPrefix: import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY?.substring(0, 7) + '...'
-  });
-  
   if (!stripePromise) {
     if (!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY) {
-      debugStripe.error('MISSING_STRIPE_KEY', 'VITE_STRIPE_PUBLISHABLE_KEY is not set');
+      console.error('VITE_STRIPE_PUBLISHABLE_KEY is not set');
     }
     stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
   }
@@ -41,7 +14,6 @@ export const getStripe = () => {
 
 // API base URL - adjust based on your backend setup
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5174/api';
-debugStripe.log('API_BASE_URL_SET', { apiBaseUrl: API_BASE_URL });
 
 /**
  * Create a payment intent on the server
@@ -51,21 +23,12 @@ debugStripe.log('API_BASE_URL_SET', { apiBaseUrl: API_BASE_URL });
  * @returns {Promise} Payment intent client secret
  */
 export const createPaymentIntent = async (items, shippingInfo, customerInfo) => {
-  debugStripe.log('CREATE_PAYMENT_INTENT_INITIATED', {
-    itemCount: items?.length,
-    items: items,
-    shippingInfo: shippingInfo,
-    customerInfo: customerInfo
-  });
-  
   // Validate input parameters
   if (!items || !Array.isArray(items) || items.length === 0) {
-    debugStripe.error('INVALID_ITEMS', 'Items array is empty or invalid');
     throw new Error('Items array is required and cannot be empty');
   }
   
   if (!customerInfo || !customerInfo.email) {
-    debugStripe.error('INVALID_CUSTOMER_INFO', 'Customer info or email is missing');
     throw new Error('Customer information with email is required');
   }
   
@@ -76,8 +39,6 @@ export const createPaymentIntent = async (items, shippingInfo, customerInfo) => 
       customerInfo,
     };
     
-    debugStripe.api('POST', `${API_BASE_URL}/create-payment-intent`, requestData);
-    
     const response = await fetch(`${API_BASE_URL}/create-payment-intent`, {
       method: 'POST',
       headers: {
@@ -86,32 +47,14 @@ export const createPaymentIntent = async (items, shippingInfo, customerInfo) => 
       body: JSON.stringify(requestData),
     });
 
-    debugStripe.log('PAYMENT_INTENT_RESPONSE_RECEIVED', {
-      status: response.status,
-      statusText: response.statusText,
-      ok: response.ok
-    });
-
     if (!response.ok) {
       const errorText = await response.text();
-      debugStripe.error('PAYMENT_INTENT_HTTP_ERROR', {
-        status: response.status,
-        statusText: response.statusText,
-        errorText: errorText
-      });
       throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
     }
 
     const data = await response.json();
-    debugStripe.log('PAYMENT_INTENT_SUCCESS', {
-      hasClientSecret: !!data.client_secret,
-      orderTotal: data.order_total,
-      clientSecretPrefix: data.client_secret?.substring(0, 10) + '...'
-    });
-    
     return data;
   } catch (error) {
-    debugStripe.error('CREATE_PAYMENT_INTENT_ERROR', error);
     console.error('Error creating payment intent:', error);
     throw error;
   }
@@ -197,14 +140,7 @@ export const getPaymentMethods = async (customerId) => {
  * @returns {Object} Breakdown of costs
  */
 export const calculateOrderTotal = (items, shippingInfo = {}) => {
-  debugStripe.log('CALCULATE_ORDER_TOTAL_INITIATED', {
-    itemCount: items?.length,
-    items: items,
-    shippingInfo: shippingInfo
-  });
-  
   if (!items || !Array.isArray(items)) {
-    debugStripe.error('INVALID_ITEMS_FOR_CALCULATION', 'Items must be an array');
     return {
       subtotal: 0,
       shipping: 0,
@@ -216,35 +152,17 @@ export const calculateOrderTotal = (items, shippingInfo = {}) => {
   
   const subtotal = items.reduce((total, item) => {
     const itemTotal = item.price * item.quantity;
-    debugStripe.log('CALCULATING_ITEM_SUBTOTAL', {
-      itemId: item.id,
-      itemName: item.name,
-      price: item.price,
-      quantity: item.quantity,
-      itemTotal: itemTotal
-    });
     return total + itemTotal;
   }, 0);
 
   const shipping = items.reduce((total, item) => {
     const itemShipping = item.shipping || 0;
-    debugStripe.log('CALCULATING_ITEM_SHIPPING', {
-      itemId: item.id,
-      itemName: item.name,
-      shipping: itemShipping
-    });
     return total + itemShipping;
   }, 0);
 
   // Tax calculation (you can customize this based on location)
   const taxRate = shippingInfo.taxRate || 0; // Default 0% tax
   const tax = subtotal * taxRate;
-  
-  debugStripe.log('TAX_CALCULATION', {
-    subtotal: subtotal,
-    taxRate: taxRate,
-    taxAmount: tax
-  });
 
   const total = subtotal + shipping + tax;
   
@@ -255,8 +173,6 @@ export const calculateOrderTotal = (items, shippingInfo = {}) => {
     total: Math.round(total * 100) / 100,
     totalCents: Math.round(total * 100), // For Stripe (amount in cents)
   };
-  
-  debugStripe.log('ORDER_TOTAL_CALCULATED', result);
   
   return result;
 };

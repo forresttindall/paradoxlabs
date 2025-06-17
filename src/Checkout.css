@@ -18,7 +18,7 @@
 .checkout-content {
   display: grid;
   grid-template-columns: 1fr 400px;
-  gap: 3rem;
+  gap: 20px;
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
@@ -234,6 +234,7 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem 0;
+  margin-bottom: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 

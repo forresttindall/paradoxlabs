@@ -97,6 +97,7 @@
 
 .cart-item {
   display: grid;
+  
   grid-template-columns: 120px 1fr auto auto;
   gap: 1rem;
   align-items: center;
