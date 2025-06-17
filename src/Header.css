@@ -406,6 +406,10 @@
   }
 }
 
+.fa-share-nodes {
+  color: #A1A1AA;
+  transition: all 0.3s ease;
+}
 .social-dropdown .dropdown-trigger:hover .fa-share-nodes {
   color: #7bbf00;
   text-shadow: 0 0 10px rgba(123, 191, 0, 0.5);
@@ -446,8 +450,7 @@
 /* Style for all FontAwesome icons in the dropdown */
 .dropdown-item .fa-threads,
 .dropdown-item .fa-instagram,
-.dropdown-item .fa-bluesky,
-.dropdown-trigger .fa-share-nodes {
+.dropdown-item .fa-bluesky {
     color: #7bbf00;
 }
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import './Header.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram, faThreads } from '@fortawesome/free-brands-svg-icons';
 import { faShareNodes } from '@fortawesome/free-solid-svg-icons';
@@ -19,6 +19,7 @@ function Header() {
   const [isSocialDropdownOpen, setIsSocialDropdownOpen] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { getCartItemCount } = useContext(CartContext);
 
   // Create refs for the dropdown and mobile menu
@@ -78,6 +79,12 @@ function Header() {
       document.removeEventListener('keydown', handleEscapeKey);
     };
   }, [isMenuOpen, isSocialDropdownOpen]);
+
+  // Close mobile menu when location changes (page navigation)
+  useEffect(() => {
+    setIsMenuOpen(false);
+    setIsSocialDropdownOpen(false);
+  }, [location.pathname]);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -152,8 +159,60 @@ function Header() {
           >
             Shop
           </Link>
-          <Link to="/about" className="nav-link">About</Link>
-          <Link to="/contact" className="nav-link">Contact</Link>
+          <Link 
+            to="/about" 
+            className="nav-link"
+            onClick={() => {
+              setIsMenuOpen(false);
+              setIsSocialDropdownOpen(false);
+            }}
+          >
+            About
+          </Link>
+          <Link 
+            to="/contact" 
+            className="nav-link"
+            onClick={() => {
+              setIsMenuOpen(false);
+              setIsSocialDropdownOpen(false);
+            }}
+          >
+            Contact
+          </Link>
+          
+          {/* Social Dropdown */}
+          <div className="social-dropdown" ref={socialDropdownRef}>
+            <button 
+              className="dropdown-trigger"
+              onClick={toggleSocialDropdown}
+              aria-label="Social Media Links"
+            >
+              <FontAwesomeIcon icon={faShareNodes} />
+            </button>
+            
+            {isSocialDropdownOpen && (
+              <div className="dropdown-menu">
+                <a 
+                  href="https://instagram.com/paradox_labs" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="dropdown-item"
+                  onClick={() => setIsSocialDropdownOpen(false)}
+                >
+                  <FontAwesomeIcon icon={faInstagram} /> Instagram
+                </a>
+                <a 
+                  href="https://threads.com/@paradox_labs" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="dropdown-item"
+                  onClick={() => setIsSocialDropdownOpen(false)}
+                >
+                  <FontAwesomeIcon icon={faThreads} /> Threads
+                </a>
+              </div>
+            )}
+          </div>
           <Link 
             to="/cart" 
             className="cart-link"
