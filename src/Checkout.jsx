@@ -112,17 +112,32 @@ const CheckoutForm = () => {
     try {
       setIsProcessing(true);
       
+      // Only create payment intent if we have sufficient billing information
+      // when "same as billing" is checked
+      if (formData.sameAsShipping) {
+        if (!formData.billingAddress || !formData.billingCity || !formData.billingState || !formData.billingZip || !formData.firstName || !formData.lastName) {
+          // Don't create payment intent yet if required billing fields are missing
+          setIsProcessing(false);
+          return;
+        }
+      }
+      
       const shippingInfo = {
-        address: formData.sameAsShipping ? formData.billingAddress : formData.shippingAddress,
-        city: formData.sameAsShipping ? formData.billingCity : formData.shippingCity,
-        state: formData.sameAsShipping ? formData.billingState : formData.shippingState,
-        zip: formData.sameAsShipping ? formData.billingZip : formData.shippingZip,
-        country: formData.sameAsShipping ? formData.billingCountry : formData.shippingCountry,
+        name: formData.sameAsShipping 
+          ? `${formData.firstName} ${formData.lastName}`.trim()
+          : `${formData.shippingFirstName} ${formData.shippingLastName}`.trim(),
+        address: {
+          line1: formData.sameAsShipping ? formData.billingAddress : formData.shippingAddress,
+          city: formData.sameAsShipping ? formData.billingCity : formData.shippingCity,
+          state: formData.sameAsShipping ? formData.billingState : formData.shippingState,
+          postal_code: formData.sameAsShipping ? formData.billingZip : formData.shippingZip,
+          country: formData.sameAsShipping ? formData.billingCountry : formData.shippingCountry,
+        }
       };
 
       const customerInfo = {
         email: formData.email,
-        name: `${formData.firstName} ${formData.lastName}`,
+        name: `${formData.firstName} ${formData.lastName}`.trim(),
         phone: formData.phone,
       };
       
