@@ -22,10 +22,10 @@ const debugAPI = {
   }
 };
 
-const stripe = new Stripe(process.env.VITE_STRIPE_SECRET_KEY);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 debugAPI.log('STRIPE_INITIALIZED', {
-  hasSecretKey: !!process.env.VITE_STRIPE_SECRET_KEY,
-  keyPrefix: process.env.VITE_STRIPE_SECRET_KEY?.substring(0, 7) + '...'
+  hasSecretKey: !!process.env.STRIPE_SECRET_KEY,
+  keyPrefix: process.env.STRIPE_SECRET_KEY?.substring(0, 7) + '...'
 });
 
 export default async function handler(req, res) {
