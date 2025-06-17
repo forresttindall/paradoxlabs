@@ -65,15 +65,16 @@ export default async function handler(req, res) {
     
     debugAPI.log('VALIDATION_PASSED', 'All required fields are present');
 
-    // Calculate order total
-    const calculateTotal = (items) => {
+    // Calculate order total - matches frontend logic
+    const calculateTotal = (items, shippingInfo = {}) => {
       debugAPI.log('CALCULATING_ORDER_TOTAL', {
         itemCount: items.length,
         items: items.map(item => ({
           id: item.id,
           name: item.name,
           price: item.price,
-          quantity: item.quantity
+          quantity: item.quantity,
+          shipping: item.shipping
         }))
       });
       
@@ -89,14 +90,22 @@ export default async function handler(req, res) {
         return sum + itemTotal;
       }, 0);
       
-      const shipping = subtotal > 100 ? 0 : 10; // Free shipping over $100
-      const tax = subtotal * 0.08; // 8% tax
+      // Use item-specific shipping costs instead of flat rate
+      const shipping = items.reduce((total, item) => {
+        const itemShipping = item.shipping || 0;
+        return total + itemShipping;
+      }, 0);
+      
+      // Tax calculation based on shipping info or default to 0%
+      const taxRate = shippingInfo.taxRate || 0;
+      const tax = subtotal * taxRate;
       
       debugAPI.log('ORDER_CALCULATION_BREAKDOWN', {
         subtotal: subtotal,
         shipping: shipping,
         tax: tax,
-        freeShippingApplied: subtotal > 100
+        taxRate: taxRate,
+        itemShippingUsed: true
       });
       
       const result = {
@@ -110,7 +119,7 @@ export default async function handler(req, res) {
       return result;
     };
 
-    const orderTotal = calculateTotal(items);
+    const orderTotal = calculateTotal(items, shippingInfo);
 
     // Normalize shipping info structure - handle both flat and nested formats
     const normalizeShippingInfo = (shippingInfo, customerInfo) => {
