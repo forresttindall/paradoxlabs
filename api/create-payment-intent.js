@@ -112,6 +112,127 @@ export default async function handler(req, res) {
 
     const orderTotal = calculateTotal(items);
 
+    // Normalize shipping info structure - handle both flat and nested formats
+    const normalizeShippingInfo = (shippingInfo, customerInfo) => {
+      debugAPI.log('NORMALIZING_SHIPPING_INFO', {
+        hasName: !!shippingInfo.name,
+        hasNestedAddress: !!shippingInfo.address?.line1,
+        hasFlatAddress: !!shippingInfo.address && typeof shippingInfo.address === 'string',
+        shippingKeys: Object.keys(shippingInfo)
+      });
+      
+      // If shipping info has nested address structure (correct format)
+      if (shippingInfo.address && typeof shippingInfo.address === 'object' && shippingInfo.address.line1) {
+        return {
+          name: shippingInfo.name || `${customerInfo.name}`,
+          address: {
+            line1: shippingInfo.address.line1,
+            line2: shippingInfo.address.line2 || null,
+            city: shippingInfo.address.city,
+            state: shippingInfo.address.state,
+            postal_code: shippingInfo.address.postal_code,
+            country: shippingInfo.address.country || 'US'
+          }
+        };
+      }
+      
+      // If shipping info has flat structure (legacy format from frontend)
+      return {
+        name: shippingInfo.name || `${customerInfo.name}`,
+        address: {
+          line1: shippingInfo.address || shippingInfo.line1,
+          line2: shippingInfo.line2 || null,
+          city: shippingInfo.city,
+          state: shippingInfo.state,
+          postal_code: shippingInfo.zip || shippingInfo.postal_code,
+          country: shippingInfo.country || 'US'
+        }
+      };
+    };
+    
+    const normalizedShipping = normalizeShippingInfo(shippingInfo, customerInfo);
+    
+    // Validate normalized shipping info
+    const validateShippingInfo = (shipping) => {
+      const errors = [];
+      
+      if (!shipping.name || shipping.name.trim() === '') {
+        errors.push('Shipping name is required');
+      }
+      
+      if (!shipping.address.line1 || shipping.address.line1.trim() === '') {
+        errors.push('Shipping address line 1 is required');
+      }
+      
+      if (!shipping.address.city || shipping.address.city.trim() === '') {
+        errors.push('Shipping city is required');
+      }
+      
+      if (!shipping.address.state || shipping.address.state.trim() === '') {
+        errors.push('Shipping state is required');
+      }
+      
+      if (!shipping.address.postal_code || shipping.address.postal_code.trim() === '') {
+        errors.push('Shipping postal code is required');
+      }
+      
+      // Normalize state format for US addresses
+      if (shipping.address.country === 'US' && shipping.address.state) {
+        const stateMap = {
+          'alabama': 'AL', 'alaska': 'AK', 'arizona': 'AZ', 'arkansas': 'AR', 'california': 'CA',
+          'colorado': 'CO', 'connecticut': 'CT', 'delaware': 'DE', 'florida': 'FL', 'georgia': 'GA',
+          'hawaii': 'HI', 'idaho': 'ID', 'illinois': 'IL', 'indiana': 'IN', 'iowa': 'IA',
+          'kansas': 'KS', 'kentucky': 'KY', 'louisiana': 'LA', 'maine': 'ME', 'maryland': 'MD',
+          'massachusetts': 'MA', 'michigan': 'MI', 'minnesota': 'MN', 'mississippi': 'MS', 'missouri': 'MO',
+          'montana': 'MT', 'nebraska': 'NE', 'nevada': 'NV', 'new hampshire': 'NH', 'new jersey': 'NJ',
+          'new mexico': 'NM', 'new york': 'NY', 'north carolina': 'NC', 'north dakota': 'ND', 'ohio': 'OH',
+          'oklahoma': 'OK', 'oregon': 'OR', 'pennsylvania': 'PA', 'rhode island': 'RI', 'south carolina': 'SC',
+          'south dakota': 'SD', 'tennessee': 'TN', 'texas': 'TX', 'utah': 'UT', 'vermont': 'VT',
+          'virginia': 'VA', 'washington': 'WA', 'west virginia': 'WV', 'wisconsin': 'WI', 'wyoming': 'WY'
+        };
+        
+        const stateLower = shipping.address.state.toLowerCase();
+        if (stateMap[stateLower]) {
+          shipping.address.state = stateMap[stateLower];
+          debugAPI.log('STATE_NORMALIZED', {
+            original: shippingInfo.state,
+            normalized: shipping.address.state
+          });
+        } else if (shipping.address.state.length !== 2) {
+          // If it's not a 2-letter code and not in our map, it might be invalid
+          debugAPI.log('STATE_FORMAT_WARNING', {
+            state: shipping.address.state,
+            message: 'State format may be invalid for Stripe'
+          });
+        }
+      }
+      
+      return { isValid: errors.length === 0, errors };
+    };
+    
+    const shippingValidation = validateShippingInfo(normalizedShipping);
+    
+    if (!shippingValidation.isValid) {
+      debugAPI.error('SHIPPING_VALIDATION_FAILED', {
+        errors: shippingValidation.errors,
+        shippingData: normalizedShipping
+      });
+      return res.status(400).json({ 
+        error: 'Invalid shipping information: ' + shippingValidation.errors.join(', '),
+        type: 'validation_error'
+      });
+    }
+    
+    debugAPI.log('NORMALIZED_SHIPPING_INFO', {
+      name: normalizedShipping.name,
+      hasLine1: !!normalizedShipping.address.line1,
+      hasCity: !!normalizedShipping.address.city,
+      hasState: !!normalizedShipping.address.state,
+      hasPostalCode: !!normalizedShipping.address.postal_code,
+      country: normalizedShipping.address.country,
+      stateFormat: normalizedShipping.address.state
+    });
+
     // Create payment intent
     const paymentIntentData = {
       amount: orderTotal.total,
@@ -126,17 +247,7 @@ export default async function handler(req, res) {
           price: item.price
         })))
       },
-      shipping: {
-        name: shippingInfo.name,
-        address: {
-          line1: shippingInfo.address.line1,
-          line2: shippingInfo.address.line2,
-          city: shippingInfo.address.city,
-          state: shippingInfo.address.state,
-          postal_code: shippingInfo.address.postal_code,
-          country: shippingInfo.address.country || 'US'
-        }
-      }
+      shipping: normalizedShipping
     };
     
     debugAPI.log('CREATING_PAYMENT_INTENT', {
