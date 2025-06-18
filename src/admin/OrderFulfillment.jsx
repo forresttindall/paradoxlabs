@@ -21,6 +21,7 @@ const OrderFulfillment = () => {
   const fetchOrders = async () => {
     try {
       setLoading(true);
+      setError(null);
       const params = new URLSearchParams();
       if (selectedStatus !== 'all') {
         params.append('status', selectedStatus);
@@ -32,13 +33,21 @@ const OrderFulfillment = () => {
         }
       });
       
+      if (response.status === 401) {
+        setError('Authentication failed. Please check your admin key.');
+        setIsAuthenticated(false);
+        return;
+      }
+      
       if (!response.ok) {
-        throw new Error('Failed to fetch orders');
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `Server error: ${response.status}`);
       }
       
       const data = await response.json();
-      setOrders(data.orders);
+      setOrders(data.orders || []);
     } catch (err) {
+      console.error('Fetch orders error:', err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -61,14 +70,22 @@ const OrderFulfillment = () => {
         })
       });
       
+      if (response.status === 401) {
+        alert('Authentication failed. Please check your admin key and try again.');
+        setIsAuthenticated(false);
+        return;
+      }
+      
       if (!response.ok) {
-        throw new Error('Failed to update order');
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `Server error: ${response.status}`);
       }
       
       const result = await response.json();
-      alert(result.message);
+      alert(result.message || 'Order updated successfully');
       fetchOrders(); // Refresh orders
     } catch (err) {
+      console.error('Order update error:', err);
       alert('Error updating order: ' + err.message);
     }
   };
@@ -164,6 +181,17 @@ const OrderFulfillment = () => {
             </select>
             <button onClick={fetchOrders} className="refresh-btn">
               Refresh
+            </button>
+            <button 
+              onClick={() => {
+                setIsAuthenticated(false);
+                setAdminKey('');
+                setOrders([]);
+                setError(null);
+              }} 
+              className="logout-btn"
+            >
+              Logout
             </button>
           </div>
         </div>

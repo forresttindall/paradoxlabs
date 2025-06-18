@@ -92,6 +92,12 @@ const sendShippingNotification = async (customerEmail, orderDetails, trackingInf
 // Update payment intent metadata with fulfillment status
 const updateFulfillmentStatus = async (paymentIntentId, status, trackingInfo = null) => {
   try {
+    debugWebhook.log('FULFILLMENT_UPDATE_START', {
+      paymentIntentId,
+      status,
+      hasTracking: !!trackingInfo
+    });
+
     const updateData = {
       metadata: {
         fulfillment_status: status,
@@ -100,25 +106,42 @@ const updateFulfillmentStatus = async (paymentIntentId, status, trackingInfo = n
     };
 
     if (trackingInfo) {
-      updateData.metadata.tracking_number = trackingInfo.trackingNumber;
-      updateData.metadata.tracking_carrier = trackingInfo.carrier;
+      updateData.metadata.tracking_number = trackingInfo.trackingNumber || '';
+      updateData.metadata.tracking_carrier = trackingInfo.carrier || '';
       updateData.metadata.tracking_url = trackingInfo.trackingUrl || '';
       updateData.metadata.shipped_date = new Date().toISOString();
+      
+      if (trackingInfo.estimatedDelivery) {
+        updateData.metadata.estimated_delivery = trackingInfo.estimatedDelivery;
+      }
     }
 
-    await stripe.paymentIntents.update(paymentIntentId, updateData);
+    const updatedPaymentIntent = await stripe.paymentIntents.update(paymentIntentId, updateData);
     
     debugWebhook.log('FULFILLMENT_STATUS_UPDATED', {
       paymentIntentId,
       status,
-      hasTracking: !!trackingInfo
+      hasTracking: !!trackingInfo,
+      updatedMetadata: updatedPaymentIntent.metadata
     });
+    
+    return updatedPaymentIntent;
   } catch (error) {
     debugWebhook.error('FULFILLMENT_UPDATE_FAILED', {
       paymentIntentId,
-      error: error.message
+      status,
+      error: error.message,
+      stack: error.stack
     });
-    throw error;
+    
+    // Provide more specific error messages
+    if (error.message.includes('No such payment_intent')) {
+      throw new Error(`Payment intent ${paymentIntentId} not found`);
+    } else if (error.message.includes('Invalid request')) {
+      throw new Error(`Invalid update request for payment intent ${paymentIntentId}`);
+    } else {
+      throw new Error(`Failed to update fulfillment status: ${error.message}`);
+    }
   }
 };
 
@@ -187,12 +210,36 @@ export { updateFulfillmentStatus, sendShippingNotification };
 // Manual fulfillment function for admin use
 export const markOrderAsShipped = async (paymentIntentId, trackingInfo) => {
   try {
+    debugWebhook.log('MARK_SHIPPED_START', {
+      paymentIntentId,
+      trackingInfo: {
+        hasNumber: !!trackingInfo?.trackingNumber,
+        hasCarrier: !!trackingInfo?.carrier,
+        hasUrl: !!trackingInfo?.trackingUrl
+      }
+    });
+
+    // Validate tracking info
+    if (!trackingInfo || !trackingInfo.trackingNumber || !trackingInfo.carrier) {
+      throw new Error('Tracking number and carrier are required');
+    }
+
     // Get payment intent to extract customer info
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+    
+    if (!paymentIntent) {
+      throw new Error(`Payment intent ${paymentIntentId} not found`);
+    }
     
     if (!paymentIntent.metadata.customer_email) {
       throw new Error('Customer email not found in payment intent metadata');
     }
+
+    debugWebhook.log('PAYMENT_INTENT_RETRIEVED', {
+      paymentIntentId,
+      hasCustomerEmail: !!paymentIntent.metadata.customer_email,
+      currentStatus: paymentIntent.metadata.fulfillment_status
+    });
 
     // Update fulfillment status
     await updateFulfillmentStatus(paymentIntentId, 'shipped', trackingInfo);
@@ -200,23 +247,31 @@ export const markOrderAsShipped = async (paymentIntentId, trackingInfo) => {
     // Prepare order details for email
     const orderDetails = {
       orderNumber: paymentIntentId,
-      customerName: paymentIntent.metadata.customer_name,
+      customerName: paymentIntent.metadata.customer_name || 'Customer',
       shippingAddress: {
-        name: paymentIntent.metadata.shipping_name,
-        line1: paymentIntent.metadata.shipping_line1,
-        city: paymentIntent.metadata.shipping_city,
-        state: paymentIntent.metadata.shipping_state,
-        postal_code: paymentIntent.metadata.shipping_postal_code,
-        country: paymentIntent.metadata.shipping_country
+        name: paymentIntent.metadata.shipping_name || paymentIntent.metadata.customer_name || 'Customer',
+        line1: paymentIntent.metadata.shipping_line1 || '',
+        city: paymentIntent.metadata.shipping_city || '',
+        state: paymentIntent.metadata.shipping_state || '',
+        postal_code: paymentIntent.metadata.shipping_postal_code || '',
+        country: paymentIntent.metadata.shipping_country || 'US'
       }
     };
 
-    // Send shipping notification
-    await sendShippingNotification(
-      paymentIntent.metadata.customer_email,
-      orderDetails,
-      trackingInfo
-    );
+    // Send shipping notification (but don't fail the whole operation if email fails)
+    try {
+      await sendShippingNotification(
+        paymentIntent.metadata.customer_email,
+        orderDetails,
+        trackingInfo
+      );
+    } catch (emailError) {
+      debugWebhook.error('SHIPPING_EMAIL_FAILED_BUT_CONTINUING', {
+        paymentIntentId,
+        emailError: emailError.message
+      });
+      // Continue with success even if email fails
+    }
 
     debugWebhook.log('ORDER_MARKED_AS_SHIPPED', {
       paymentIntentId,
@@ -230,8 +285,19 @@ export const markOrderAsShipped = async (paymentIntentId, trackingInfo) => {
   } catch (error) {
     debugWebhook.error('MARK_SHIPPED_FAILED', {
       paymentIntentId,
-      error: error.message
+      error: error.message,
+      stack: error.stack
     });
-    throw error;
+    
+    // Provide more specific error messages
+    if (error.message.includes('No such payment_intent')) {
+      throw new Error(`Order ${paymentIntentId} not found in Stripe`);
+    } else if (error.message.includes('Tracking number')) {
+      throw new Error('Tracking information is incomplete');
+    } else if (error.message.includes('Customer email')) {
+      throw new Error('Customer email is missing from order data');
+    } else {
+      throw new Error(`Failed to mark order as shipped: ${error.message}`);
+    }
   }
 };

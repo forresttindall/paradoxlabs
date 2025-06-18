@@ -21,14 +21,51 @@ const debugAdmin = {
 
 // Simple admin authentication (replace with proper auth in production)
 const authenticateAdmin = (req) => {
-  const adminKey = req.headers['x-admin-key'];
-  return adminKey === process.env.ADMIN_API_KEY;
+  // Handle case-insensitive header lookup
+  const adminKey = req.headers['x-admin-key'] || req.headers['X-Admin-Key'];
+  
+  if (!adminKey) {
+    debugAdmin.error('ADMIN_AUTH_FAILED', {
+      reason: 'No admin key provided',
+      headers: Object.keys(req.headers)
+    });
+    return false;
+  }
+  
+  const isValid = adminKey === process.env.ADMIN_API_KEY;
+  
+  if (!isValid) {
+    debugAdmin.error('ADMIN_AUTH_FAILED', {
+      reason: 'Invalid admin key',
+      providedKey: adminKey ? 'provided' : 'missing',
+      expectedKey: process.env.ADMIN_API_KEY ? 'configured' : 'not configured'
+    });
+  }
+  
+  return isValid;
 };
 
 export default async function handler(req, res) {
+  // Add CORS headers for admin requests
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Admin-Key');
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   // Check admin authentication
   if (!authenticateAdmin(req)) {
-    return res.status(401).json({ error: 'Unauthorized' });
+    debugAdmin.error('AUTHENTICATION_FAILED', {
+      method: req.method,
+      headers: Object.keys(req.headers),
+      hasAdminKey: !!(req.headers['x-admin-key'] || req.headers['X-Admin-Key'])
+    });
+    return res.status(401).json({ 
+      error: 'Unauthorized',
+      message: 'Invalid or missing admin API key'
+    });
   }
 
   const { method } = req;
@@ -47,9 +84,13 @@ export default async function handler(req, res) {
   } catch (error) {
     debugAdmin.error('ADMIN_REQUEST_FAILED', {
       method,
-      error: error.message
+      error: error.message,
+      stack: error.stack
     });
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ 
+      error: 'Internal server error',
+      message: error.message
+    });
   }
 }
 
@@ -133,13 +174,21 @@ const handleUpdateOrder = async (req, res) => {
     const { orderId, action, trackingInfo } = req.body;
 
     if (!orderId || !action) {
-      return res.status(400).json({ error: 'Order ID and action are required' });
+      return res.status(400).json({ 
+        error: 'Order ID and action are required',
+        message: 'Missing required fields: orderId or action'
+      });
     }
 
     debugAdmin.log('ORDER_UPDATE_REQUEST', {
       orderId,
       action,
-      hasTracking: !!trackingInfo
+      hasTracking: !!trackingInfo,
+      trackingInfo: trackingInfo ? {
+        hasNumber: !!trackingInfo.trackingNumber,
+        hasCarrier: !!trackingInfo.carrier,
+        hasUrl: !!trackingInfo.trackingUrl
+      } : null
     });
 
     let result;
@@ -148,7 +197,8 @@ const handleUpdateOrder = async (req, res) => {
       case 'mark_shipped':
         if (!trackingInfo || !trackingInfo.trackingNumber || !trackingInfo.carrier) {
           return res.status(400).json({ 
-            error: 'Tracking number and carrier are required for shipping' 
+            error: 'Tracking number and carrier are required for shipping',
+            message: 'Please provide both tracking number and carrier information'
           });
         }
         result = await markOrderAsShipped(orderId, trackingInfo);
@@ -170,7 +220,10 @@ const handleUpdateOrder = async (req, res) => {
         break;
 
       default:
-        return res.status(400).json({ error: 'Invalid action' });
+        return res.status(400).json({ 
+          error: 'Invalid action',
+          message: `Action '${action}' is not supported. Valid actions: mark_shipped, mark_processing, mark_delivered, mark_cancelled`
+        });
     }
 
     debugAdmin.log('ORDER_UPDATE_SUCCESS', {
@@ -182,9 +235,17 @@ const handleUpdateOrder = async (req, res) => {
     res.status(200).json(result);
   } catch (error) {
     debugAdmin.error('UPDATE_ORDER_FAILED', {
-      error: error.message
+      orderId: req.body?.orderId,
+      action: req.body?.action,
+      error: error.message,
+      stack: error.stack
     });
-    throw error;
+    
+    // Don't throw the error, handle it here
+    res.status(500).json({
+      error: 'Failed to update order',
+      message: error.message || 'An unexpected error occurred while updating the order'
+    });
   }
 };
 

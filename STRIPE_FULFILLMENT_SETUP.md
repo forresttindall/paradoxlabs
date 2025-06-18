@@ -197,6 +197,27 @@ Stripe automatically sends receipt emails when:
 3. Review browser console for JavaScript errors
 4. Ensure proper CORS configuration
 
+### Order Update Errors ("Failed to update order")
+1. **Authentication Issues**: 
+   - Verify the admin API key in `.env` file matches what you're entering
+   - Check for case sensitivity in header names (now handled automatically)
+   - Use the logout button and re-authenticate if needed
+
+2. **Network/API Issues**:
+   - Check browser console for detailed error messages
+   - Verify the API endpoint is accessible at `/api/admin/fulfillment`
+   - Ensure proper CORS headers are configured
+
+3. **Stripe Integration Issues**:
+   - Verify the payment intent ID exists in Stripe
+   - Check that the Stripe secret key is valid and has proper permissions
+   - Review server logs for detailed error information
+
+4. **Tracking Information Issues**:
+   - Ensure both tracking number and carrier are provided
+   - Check that tracking information is properly formatted
+   - Verify email configuration if shipping notifications fail
+
 ## Future Enhancements
 
 1. **Inventory Management**: Track product stock levels
@@ -205,6 +226,26 @@ Stripe automatically sends receipt emails when:
 4. **Multi-carrier Integration**: Support for multiple shipping providers
 5. **Customer Portal**: Allow customers to track their orders
 6. **Automated Fulfillment**: Integration with fulfillment centers
+
+## Recent Fixes (January 2024)
+
+### Authentication Error Resolution
+- **Fixed case sensitivity issue**: Admin API authentication now handles both `X-Admin-Key` and `x-admin-key` headers
+- **Enhanced error handling**: More specific error messages for authentication failures
+- **Improved debugging**: Added comprehensive logging for authentication issues
+- **Better user experience**: Added logout button and proper error feedback in admin dashboard
+
+### Order Update Error Resolution
+- **Robust error handling**: Improved error messages for order update failures
+- **Stripe integration fixes**: Better handling of payment intent retrieval and updates
+- **Email notification resilience**: Order updates now succeed even if email notifications fail
+- **Enhanced debugging**: Detailed logging for troubleshooting order update issues
+
+### UI/UX Improvements
+- **Logout functionality**: Added logout button to admin dashboard for easy re-authentication
+- **Better error feedback**: More informative error messages throughout the application
+- **Consistent styling**: Updated logout button to match the existing design theme
+- **CORS configuration**: Improved API endpoint configuration for better reliability
 
 ## Support
 
