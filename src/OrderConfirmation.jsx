@@ -175,29 +175,60 @@ const OrderConfirmation = () => {
             <h2>What's Next?</h2>
             <div className="steps-grid">
               <div className="step">
-                <div className="step-icon">📧</div>
+                <div className="step-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="var(--accent)" strokeWidth="2" fill="none"/>
+                    <polyline points="22,6 12,13 2,6" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
                 <h3>Confirmation Email</h3>
                 <p>A confirmation email has been sent to <strong>{orderDetails.email}</strong> with your order details and receipt.</p>
               </div>
               <div className="step">
-                <div className="step-icon">📦</div>
+                <div className="step-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="var(--accent)" strokeWidth="2" fill="none"/>
+                    <polyline points="3.27,6.96 12,12.01 20.73,6.96" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <line x1="12" y1="22.08" x2="12" y2="12" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                </div>
                 <h3>Order Processing</h3>
                 <p>Your order is being prepared and will be processed within 1-2 business days. You'll receive updates via email.</p>
               </div>
               <div className="step">
-                <div className="step-icon">🚚</div>
+                <div className="step-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="1" y="3" width="15" height="13" rx="2" ry="2" stroke="var(--accent)" strokeWidth="2" fill="none"/>
+                    <path d="m16 8 1.5-1.5c.8-.8 2.1-.8 2.8 0s.8 2.1 0 2.8L18.8 11" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <circle cx="5.5" cy="10.5" r="2.5" stroke="var(--accent)" strokeWidth="2" fill="none"/>
+                    <path d="M16 16h6" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round"/>
+                    <path d="M19 13v6" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                </div>
                 <h3>Shipping & Tracking</h3>
                 <p>Once your order ships, you'll receive tracking information to monitor your package's progress.</p>
               </div>
               <div className="step">
-                <div className="step-icon">💬</div>
+                <div className="step-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="var(--accent)" strokeWidth="2" fill="none"/>
+                    <path d="M8 9h8" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round"/>
+                    <path d="M8 13h6" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                </div>
                 <h3>Customer Support</h3>
                 <p>Questions about your order? Contact us anytime - we're here to help!</p>
               </div>
             </div>
             
             <div className="important-notice">
-              <div className="notice-icon">ℹ️</div>
+              <div className="notice-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="12" cy="12" r="10" stroke="var(--accent)" strokeWidth="2" fill="none"/>
+                  <path d="M12 16v-4" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round"/>
+                  <path d="M12 8h.01" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              </div>
               <div className="notice-content">
                 <h4>Important Information</h4>
                 <ul>

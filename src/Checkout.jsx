@@ -348,10 +348,10 @@ const CheckoutForm = () => {
             quantity: item.quantity,
             image: item.image || '/placeholder-image.jpg'
           })),
-          subtotal: orderTotal.subtotal / 100, // Convert from cents to dollars
-          shipping: orderTotal.shipping / 100,
-          tax: orderTotal.tax / 100,
-          total: orderTotal.total / 100,
+          subtotal: orderTotal.subtotal, // Already in dollars from calculateOrderTotal
+          shipping: orderTotal.shipping,
+          tax: orderTotal.tax,
+          total: orderTotal.total,
           paymentMethod: {
             last4: paymentMethod.card?.last4 || '****',
             brand: paymentMethod.card?.brand || 'card'

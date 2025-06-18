@@ -295,8 +295,30 @@
 }
 
 .step-icon {
-  font-size: 2rem;
   margin-bottom: 1rem;
+  color: var(--accent);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  background: rgba(123, 191, 0, 0.1);
+  border: 1px solid rgba(123, 191, 0, 0.3);
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  transition: all 0.3s ease;
+}
+
+.step-icon:hover {
+  background: rgba(123, 191, 0, 0.2);
+  border-color: var(--accent);
+  box-shadow: 0 0 15px rgba(123, 191, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.step-icon svg {
+  color: var(--accent);
+  transition: all 0.3s ease;
 }
 
 .step h3 {
@@ -327,9 +349,23 @@
 }
 
 .notice-icon {
-  font-size: 1.5rem;
+  color: var(--accent);
+  margin-right: 1rem;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: rgba(123, 191, 0, 0.1);
+  border: 1px solid rgba(123, 191, 0, 0.3);
+  border-radius: 50%;
+  transition: all 0.3s ease;
   margin-top: 0.25rem;
+}
+
+.notice-icon svg {
+  color: var(--accent);
 }
 
 .notice-content h4 {
