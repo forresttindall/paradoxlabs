@@ -39,7 +39,7 @@ function Shop() {
             description: 'Ultra-secure portable storage with military-grade encryption',
             price: 0,
             image: '/Images/_DSC1120.jpg',
-            category: 'storage',
+            category: 'technology',
             shipping: 7,
             inventory: 0
         },
@@ -49,7 +49,7 @@ function Shop() {
             description: 'Covert non-metalic ultra tough last ditch multi-tool',
             price: 0,
             image: '/Images/comingsoon.jpg',
-            category: 'other',
+            category: 'tools',
             shipping: 8,
             inventory: 0
         },
@@ -57,7 +57,8 @@ function Shop() {
     
     const categories = [
         { id: 'all', name: 'All Products' },
-        { id: 'storage', name: 'Storage' },
+        { id: 'technology', name: 'Technology' },
+        { id: 'accessories', name: 'Accessories' },
         { id: 'tools', name: 'Tools' },
     ];
     
