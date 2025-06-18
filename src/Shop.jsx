@@ -24,44 +24,34 @@ function Shop() {
     
     const products = [
         {
+            id: 'marauder-mini-case',
+            name: 'Marauder Mini Case',
+            description: 'Translucent purple marauder case with gps antenna port',
+            price: 20,
+            image: '/Images/marauder-case.jpg',
+            category: 'accessories',
+            shipping: 5,
+            inventory: 10
+        },
+        {
             id: 'stealth-usb',
             name: 'Stealth USB',
             description: 'Ultra-secure portable storage with military-grade encryption',
-            price: 100,
+            price: 0,
             image: '/Images/_DSC1120.jpg',
             category: 'storage',
             shipping: 7,
-            inventory: 10
+            inventory: 0
         },
         {
             id: 'splice',
             name: 'Splice',
             description: 'Covert non-metalic ultra tough last ditch multi-tool',
-            price: 40,
-            image: '/Images/product2.jpg',
-            category: 'tools',
-            shipping: 7,
-            inventory: 10
-        },
-        {
-            id: 'stickers',
-            name: 'Sticker pack',
-            description: 'Durable UV resitant vinyl sticker pack.',
-            price: 13,
-            image: '/Images/paradoxlabsgreen.jpg',
+            price: 0,
+            image: '/Images/comingsoon.jpg',
             category: 'other',
-            shipping: 3,
-            inventory: 10
-        },
-        {
-            id: 'test',
-            name: 'test',
-            description: 'Self-destructing storage device with biometric access',
-            price: 0.50,
-            image: '/Images/product2.jpg',
-            category: 'other',
-            shipping: 0,
-            inventory: 5
+            shipping: 8,
+            inventory: 0
         },
     ];
     

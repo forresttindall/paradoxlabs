@@ -15,7 +15,7 @@ const CallToAction = () => {
             <div className="cta-features">
               <ul>
                 <li>Military-grade AES-256 encryption</li>
-                <li>Self-destruct mechanism</li>
+                <li>Unmatched security</li>
                 <li>128GB storage capacity</li>
               </ul>
             </div>

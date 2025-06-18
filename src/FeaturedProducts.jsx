@@ -23,7 +23,7 @@ function FeaturedProducts() {
             <div className="product-info">
                 <h3>Stealth USB</h3>
                 <p className="product-spacer">Ultra-secure portable storage with military-grade encryption. - 128GB</p>
-                <span className="price">$100</span>
+                <span className="price">$TBD</span>
             </div>
         </div>
         </Link>
@@ -31,12 +31,12 @@ function FeaturedProducts() {
         <Link to="/product/splice" className="product-link">
         <div className="product-card">
             <div className="product-image2">
-                <img src="/Images/product2.jpg" alt="Product 2" />
+                <img src="/Images/comingsoon.jpg" alt="Product 2" />
             </div>
             <div className="product-info">
                 <h3>Splice</h3>
                 <p className="product-spacer">Covert non-metalic ultra tough last ditch multi-tool</p>
-                <span className="price">$40</span>
+                <span className="price">$TBD</span>
             </div>
         </div>
         </Link> 
@@ -44,12 +44,12 @@ function FeaturedProducts() {
         <Link to="/product/stickers" className="product-link">
         <div className="product-card">
             <div className="product-image2">
-                <img src="/Images/paradoxlabsgreen.jpg" alt="Product 2" />
+                <img src="/Images/marauder-case.jpg" alt="Product 2" />
             </div>
             <div className="product-info">
-                <h3>Sticker Pack</h3>
-                <p className="product-spacer">Durable UV resitant vinyl sticker pack.</p>
-                <span className="price">$13</span>
+                <h3>Marauder Mini Case</h3>
+                <p className="product-spacer">Translucent purple marauder with gps antenna port</p>
+                <span className="price">$15</span>
             </div>
         </div>
         </Link> 

@@ -47,14 +47,40 @@ function ProductDetail() {
             },
             features: [
                 'Military-grade AES-256 encryption',
-                'High-speed USB 3.2 Gen 1 interface',
-                'Self-destruct mechanism',
+                'High-speed USB 3.2 Gen 1 interface', 
                 'Tamper-evident design',
                 'Zero-footprint operation',
                 'Cross-platform compatibility'
             ],
-            inventory: 10,
+            inventory: 0,
             category: 'storage'
+        },
+        'marauder-mini-case': {
+            id: 'marauder-mini-case',
+            name: 'Marauder Mini Case',
+            price: 20,
+            shipping: 5,
+            shortDescription: 'Translucent purple marauder with gps antenna port',
+            fullDescription: 'A transparent and durable case for your maurader mini device. Made from durable and lightweight translucent purple polymer',
+            images: [
+                '/Images/marauder-case.jpg'
+            ],
+            specifications: {
+                'Material': 'Translucent Purple 100% infill PLA+'
+            },
+            dimensions: {
+                'Length': '75mm',
+                'Width': '39mm',
+                'Height': '18mm',
+                'Weight': '12g'
+            },
+            features: [
+                'Translucent design',
+                'Durable and lightweight',
+                'Ergonomic grip'
+            ],
+            inventory: 10,
+            category: 'accessories'
         },
         'splice': {
             id: 'splice',
