@@ -14,7 +14,7 @@ const cardElementOptions = {
   style: {
     base: {
       fontSize: '16px',
-      color: '#ffffff',
+      color: '#e5e5e5',
       backgroundColor: '#1a1a1a',
       fontFamily: '"Kode Mono", monospace',
       '::placeholder': {
