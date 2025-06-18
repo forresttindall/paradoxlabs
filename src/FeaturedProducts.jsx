@@ -44,7 +44,7 @@ function FeaturedProducts() {
         <Link to="/product/stickers" className="product-link">
         <div className="product-card">
             <div className="product-image2">
-                <img src="/Images/marauder-case.jpg" alt="Product 2" />
+                <img src="/Images/maraudercase.jpg" alt="Product 2" />
             </div>
             <div className="product-info">
                 <h3>Marauder Mini Case</h3>
