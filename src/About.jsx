@@ -11,7 +11,7 @@ function About() {
       <div className="container">
         <div className="about-header">
           <h1>About Paradox Labs</h1>
-          <p>Leading-Edge Tech, Covert Tools, & Cyber Gadgets</p>
+          <p>Leading-Edge Technology & Covert Tools</p>
         </div>
         
         <div className="about-content">
