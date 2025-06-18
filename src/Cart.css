@@ -1,6 +1,6 @@
 /* Cart Page Styles */
 .cart-page {
-  padding: 80px 20px;
+  padding: 100px 20px;
   background: var(--background);
   min-height: 100vh;
   font-family: 'Kode Mono', monospace;
