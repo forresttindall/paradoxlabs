@@ -41,7 +41,7 @@ function FeaturedProducts() {
         </div>
         </Link> 
 
-        <Link to="/product/stickers" className="product-link">
+        <Link to="/product/marauder-mini-case" className="product-link">
         <div className="product-card">
             <div className="product-image2">
                 <img src="/Images/maraudercase.jpg" alt="Product 2" />
@@ -49,7 +49,7 @@ function FeaturedProducts() {
             <div className="product-info">
                 <h3>Marauder Mini Case</h3>
                 <p className="product-spacer">Translucent purple marauder with gps antenna port</p>
-                <span className="price">$15</span>
+                <span className="price">$18</span>
             </div>
         </div>
         </Link> 

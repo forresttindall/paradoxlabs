@@ -22,7 +22,7 @@ function ProductDetail() {
         'stealth-usb': {
             id: 'stealth-usb',
             name: 'Stealth USB',
-            price: 100,
+            price: 0,
             shipping: 7,
             shortDescription: 'Ultra-secure portable storage with military-grade encryption',
             fullDescription: 'The Stealth USB represents the pinnacle of secure portable storage technology. Engineered for professionals who demand absolute data security, this device combines AES-256 encryption with a stealth form factor. Whether you\'re a security professional, journalist, or anyone who values data privacy, the Stealth USB ensures your sensitive information remains protected against even the most sophisticated threats.',
@@ -58,8 +58,8 @@ function ProductDetail() {
         'marauder-mini-case': {
             id: 'marauder-mini-case',
             name: 'Marauder Mini Case',
-            price: 20,
-            shipping: 5,
+            price: 18,
+            shipping: 7,
             shortDescription: 'Translucent purple marauder with gps antenna port',
             fullDescription: 'A transparent and durable case for your maurader mini device. Made from durable and lightweight translucent purple polymer',
             images: [
@@ -85,12 +85,12 @@ function ProductDetail() {
         'splice': {
             id: 'splice',
             name: 'Splice',
-            price: 40,
+            price: 0,
             shipping: 7,
             shortDescription: 'Covert non-metalic ultra tough last ditch multi-tool',
             fullDescription: 'The Splice is the ultimate covert multi-tool, designed for situations where traditional metal tools would be detected or confiscated. Crafted from advanced polymer composites, this tool passes through standard metal detectors while providing essential functionality when you need it most. Its ergonomic design and tactical applications make it an indispensable tool for security professionals and prepared individuals.',
             images: [
-                '/Images/product2.jpg'
+                '/Images/comingsoon.jpg'
             ],
             specifications: {
                 'Material': 'Advanced Carbon Fiber Polymer Composite',
@@ -116,7 +116,7 @@ function ProductDetail() {
                 'Lightweight yet durable',
                 'Discreet appearance'
             ],
-            inventory: 10,
+            inventory: 0,
             category: 'tools'
         },
         'test': {
@@ -155,7 +155,7 @@ function ProductDetail() {
                 'Encrypted communication',
                 'Emergency wipe function'
             ],
-            inventory: 5,
+            inventory: 0,
             category: 'storage'
         },
         'stickers': {
@@ -194,7 +194,7 @@ function ProductDetail() {
                 'Removable without residue',
                 '5 unique tech-themed designs'
             ],
-            inventory: 10,
+            inventory: 0,
             category: 'accessories'
         }
     };

@@ -144,16 +144,16 @@ const OrderFulfillment = () => {
     return (
       <div className="admin-auth">
         <div className="auth-container">
-          <h2>Admin Access</h2>
+          <h2>Goblin's Lair</h2>
           <div className="auth-form">
             <input
               type="password"
-              placeholder="Enter admin key"
+              placeholder="Enter secret password"
               value={adminKey}
               onChange={(e) => setAdminKey(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleAuth()}
             />
-            <button onClick={handleAuth}>Access Admin Panel</button>
+            <button onClick={handleAuth}>Access Goblin's Lair</button>
           </div>
         </div>
       </div>
