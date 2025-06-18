@@ -63,7 +63,7 @@ function ProductDetail() {
             shortDescription: 'Translucent purple marauder with gps antenna port',
             fullDescription: 'A transparent and durable case for your maurader mini device. Made from durable and lightweight translucent purple polymer',
             images: [
-                '/Images/marauder-case.jpg'
+                '/Images/maraudercase.jpg'
             ],
             specifications: {
                 'Material': 'Translucent Purple 100% infill PLA+'

@@ -28,7 +28,7 @@ function Shop() {
             name: 'Marauder Mini Case',
             description: 'Translucent purple marauder case with gps antenna port',
             price: 20,
-            image: '/Images/marauder-case.jpg',
+            image: '/Images/maraudercase.jpg',
             category: 'accessories',
             shipping: 5,
             inventory: 10
