@@ -548,3 +548,37 @@
 .card-element-container .StripeElement--complete {
   border-color: var(--accent);
 }
+
+/* Fix autofill text visibility in Stripe CardElement */
+.card-element-container input:-webkit-autofill,
+.card-element-container input:-webkit-autofill:hover,
+.card-element-container input:-webkit-autofill:focus,
+.card-element-container input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--background) inset !important;
+  -webkit-text-fill-color: #e5e5e5 !important;
+  background-color: var(--background) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Additional autofill styling for any nested inputs in Stripe elements */
+.StripeElement input:-webkit-autofill,
+.StripeElement input:-webkit-autofill:hover,
+.StripeElement input:-webkit-autofill:focus,
+.StripeElement input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #1a1a1a inset !important;
+  -webkit-text-fill-color: #e5e5e5 !important;
+  background-color: #1a1a1a !important;
+  color: #e5e5e5 !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Target iframe content for Stripe elements (if accessible) */
+.card-element-container iframe {
+  background-color: var(--background) !important;
+}
+
+/* Ensure text color consistency in Stripe elements */
+.StripeElement {
+  color: #e5e5e5 !important;
+}
