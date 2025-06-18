@@ -1,6 +1,6 @@
 /* Product Detail Page Styles */
 .product-detail {
-  padding: 80px 20px;
+  padding: 100px 20px;
   background: var(--background);
   min-height: 100vh;
   font-family: 'Kode Mono', monospace;
@@ -482,7 +482,7 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .product-detail {
-    padding: 60px 20px;
+    padding: 100px 20px;
   }
   
   .product-layout {
