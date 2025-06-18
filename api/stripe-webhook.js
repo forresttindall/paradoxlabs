@@ -12,7 +12,9 @@ const transporter = createTransport({
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS
-  }
+  },
+  debug: true, // Enable debug logging
+  logger: true // Enable logger
 });
 
 // Debug utility for webhook operations
@@ -34,6 +36,17 @@ const debugWebhook = {
 // Send shipping notification email
 const sendShippingNotification = async (customerEmail, orderDetails, trackingInfo) => {
   try {
+    // Test SMTP connection first
+    debugWebhook.log('TESTING_SMTP_CONNECTION', {
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      user: process.env.SMTP_USER ? 'configured' : 'missing',
+      pass: process.env.SMTP_PASS ? 'configured' : 'missing'
+    });
+
+    await transporter.verify();
+    debugWebhook.log('SMTP_CONNECTION_VERIFIED', { success: true });
+
     const mailOptions = {
       from: process.env.FROM_EMAIL || 'noreply@paradoxlabs.tech',
       to: customerEmail,
@@ -75,17 +88,44 @@ const sendShippingNotification = async (customerEmail, orderDetails, trackingInf
       `
     };
 
-    await transporter.sendMail(mailOptions);
+    debugWebhook.log('SENDING_EMAIL', {
+      to: customerEmail.replace(/(.{3}).*(@.*)/, '$1***$2'),
+      from: mailOptions.from,
+      subject: mailOptions.subject
+    });
+
+    const result = await transporter.sendMail(mailOptions);
+    
     debugWebhook.log('SHIPPING_EMAIL_SENT', {
       customerEmail: customerEmail.replace(/(.{3}).*(@.*)/, '$1***$2'),
-      orderNumber: orderDetails.orderNumber
+      orderNumber: orderDetails.orderNumber,
+      messageId: result.messageId,
+      response: result.response
     });
   } catch (error) {
     debugWebhook.error('SHIPPING_EMAIL_FAILED', {
       error: error.message,
-      customerEmail: customerEmail.replace(/(.{3}).*(@.*)/, '$1***$2')
+      code: error.code,
+      command: error.command,
+      customerEmail: customerEmail.replace(/(.{3}).*(@.*)/, '$1***$2'),
+      smtpConfig: {
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        user: process.env.SMTP_USER ? 'configured' : 'missing',
+        pass: process.env.SMTP_PASS ? 'configured' : 'missing'
+      }
     });
-    throw error;
+    
+    // Provide more specific error messages
+    if (error.code === 'EAUTH') {
+      throw new Error('SMTP Authentication failed. Please check your email credentials and ensure you\'re using an app-specific password for Gmail.');
+    } else if (error.code === 'ECONNECTION') {
+      throw new Error('Failed to connect to SMTP server. Please check your SMTP settings.');
+    } else if (error.code === 'EMESSAGE') {
+      throw new Error('Invalid email message format.');
+    } else {
+      throw new Error(`Email sending failed: ${error.message}`);
+    }
   }
 };
 
