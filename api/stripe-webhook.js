@@ -47,6 +47,21 @@ const sendShippingNotification = async (customerEmail, orderDetails, trackingInf
     await transporter.verify();
     debugWebhook.log('SMTP_CONNECTION_VERIFIED', { success: true });
 
+    // Generate items HTML
+    const itemsHtml = orderDetails.items && orderDetails.items.length > 0 
+      ? `
+          <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="margin-top: 0; color: #333;">Items in Your Order</h3>
+            ${orderDetails.items.map(item => `
+              <div style="border-bottom: 1px solid #dee2e6; padding: 10px 0; margin-bottom: 10px;">
+                <strong>${item.name}</strong><br>
+                <span style="color: #666;">Quantity: ${item.quantity} × $${item.price.toFixed(2)}</span>
+              </div>
+            `).join('')}
+          </div>
+        `
+      : '';
+
     const mailOptions = {
       from: process.env.FROM_EMAIL || 'noreply@paradoxlabs.tech',
       to: customerEmail,
@@ -58,6 +73,8 @@ const sendShippingNotification = async (customerEmail, orderDetails, trackingInf
           <p>Hi ${orderDetails.customerName},</p>
           
           <p>Great news! Your order #${orderDetails.orderNumber} has been shipped and is on its way to you.</p>
+          
+          ${itemsHtml}
           
           <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <h3 style="margin-top: 0; color: #333;">Tracking Information</h3>
@@ -244,8 +261,103 @@ export default async function handler(req, res) {
   }
 }
 
+// Send order status notification email
+const sendOrderStatusNotification = async (customerEmail, orderDetails, status, additionalInfo = null) => {
+  try {
+    await transporter.verify();
+    
+    let subject, title, message, statusColor;
+    
+    switch (status) {
+      case 'processing':
+        subject = `Your order #${orderDetails.orderNumber} is being processed`;
+        title = 'Order Processing Update';
+        message = `Good news! Your order #${orderDetails.orderNumber} is now being processed and will be shipped soon.`;
+        statusColor = '#17a2b8';
+        break;
+      case 'cancelled':
+        subject = `Your order #${orderDetails.orderNumber} has been cancelled`;
+        title = 'Order Cancelled';
+        message = `We're sorry to inform you that your order #${orderDetails.orderNumber} has been cancelled. ${additionalInfo?.reason || 'If you have any questions, please contact our customer support team.'}`;
+        statusColor = '#dc3545';
+        break;
+      case 'delivered':
+        subject = `Your order #${orderDetails.orderNumber} has been delivered`;
+        title = 'Order Delivered';
+        message = `Great news! Your order #${orderDetails.orderNumber} has been successfully delivered.`;
+        statusColor = '#28a745';
+        break;
+      default:
+        throw new Error(`Unsupported status notification: ${status}`);
+    }
+
+    // Generate items HTML
+    const itemsHtml = orderDetails.items && orderDetails.items.length > 0 
+      ? `
+          <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="margin-top: 0; color: #333;">Items in Your Order</h3>
+            ${orderDetails.items.map(item => `
+              <div style="border-bottom: 1px solid #dee2e6; padding: 10px 0; margin-bottom: 10px;">
+                <strong>${item.name}</strong><br>
+                <span style="color: #666;">Quantity: ${item.quantity} × $${item.price.toFixed(2)}</span>
+              </div>
+            `).join('')}
+          </div>
+        `
+      : '';
+
+    const mailOptions = {
+      from: process.env.FROM_EMAIL || 'noreply@paradoxlabs.tech',
+      to: customerEmail,
+      subject,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: ${statusColor};">${title}</h2>
+          
+          <p>Hi ${orderDetails.customerName},</p>
+          
+          <p>${message}</p>
+          
+          ${itemsHtml}
+          
+          <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="margin-top: 0; color: #333;">Order Status</h3>
+            <p><strong>Order Number:</strong> #${orderDetails.orderNumber}</p>
+            <p><strong>Status:</strong> <span style="color: ${statusColor}; font-weight: bold;">${status.charAt(0).toUpperCase() + status.slice(1)}</span></p>
+            <p><strong>Order Date:</strong> ${orderDetails.orderDate ? new Date(orderDetails.orderDate).toLocaleDateString() : 'N/A'}</p>
+          </div>
+          
+          <p>If you have any questions about your order, please don't hesitate to contact our customer support team.</p>
+          
+          <p>Thank you for your business!</p>
+          
+          <p style="color: #666; font-size: 12px; margin-top: 30px;">
+            This is an automated message. Please do not reply to this email.
+          </p>
+        </div>
+      `
+    };
+
+    const result = await transporter.sendMail(mailOptions);
+    
+    debugWebhook.log('STATUS_EMAIL_SENT', {
+      customerEmail: customerEmail.replace(/(.{3}).*(@.*)/, '$1***$2'),
+      orderNumber: orderDetails.orderNumber,
+      status,
+      messageId: result.messageId
+    });
+  } catch (error) {
+    debugWebhook.error('STATUS_EMAIL_FAILED', {
+      error: error.message,
+      customerEmail: customerEmail.replace(/(.{3}).*(@.*)/, '$1***$2'),
+      status
+    });
+    throw error;
+  }
+};
+
 // Export utility functions for manual fulfillment
-export { updateFulfillmentStatus, sendShippingNotification };
+export { updateFulfillmentStatus, sendShippingNotification, sendOrderStatusNotification };
 
 // Manual fulfillment function for admin use
 export const markOrderAsShipped = async (paymentIntentId, trackingInfo) => {
@@ -284,10 +396,29 @@ export const markOrderAsShipped = async (paymentIntentId, trackingInfo) => {
     // Update fulfillment status
     await updateFulfillmentStatus(paymentIntentId, 'shipped', trackingInfo);
 
+    // Extract items from metadata
+    const items = [];
+    const itemCount = parseInt(paymentIntent.metadata.item_count || '0');
+    
+    for (let i = 1; i <= Math.min(itemCount, 3); i++) {
+      const item = {
+        id: paymentIntent.metadata[`item_${i}_id`],
+        name: paymentIntent.metadata[`item_${i}_name`],
+        quantity: parseInt(paymentIntent.metadata[`item_${i}_quantity`] || '0'),
+        price: parseFloat(paymentIntent.metadata[`item_${i}_price`] || '0')
+      };
+      
+      if (item.id && item.name) {
+        items.push(item);
+      }
+    }
+
     // Prepare order details for email
     const orderDetails = {
       orderNumber: paymentIntentId,
       customerName: paymentIntent.metadata.customer_name || 'Customer',
+      orderDate: paymentIntent.metadata.order_date,
+      items: items,
       shippingAddress: {
         name: paymentIntent.metadata.shipping_name || paymentIntent.metadata.customer_name || 'Customer',
         line1: paymentIntent.metadata.shipping_line1 || '',

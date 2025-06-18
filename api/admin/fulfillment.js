@@ -1,4 +1,4 @@
-import { markOrderAsShipped, updateFulfillmentStatus } from '../stripe-webhook.js';
+import { markOrderAsShipped, updateFulfillmentStatus, sendOrderStatusNotification } from '../stripe-webhook.js';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -206,17 +206,62 @@ const handleUpdateOrder = async (req, res) => {
 
       case 'mark_processing':
         await updateFulfillmentStatus(orderId, 'processing');
-        result = { success: true, message: 'Order marked as processing' };
+        // Send processing notification email
+        try {
+          const orderDetails = await getOrderDetailsForEmail(orderId);
+          await sendOrderStatusNotification(
+            orderDetails.customerEmail,
+            orderDetails,
+            'processing'
+          );
+        } catch (emailError) {
+          debugAdmin.error('PROCESSING_EMAIL_FAILED', {
+            orderId,
+            emailError: emailError.message
+          });
+          // Continue with success even if email fails
+        }
+        result = { success: true, message: 'Order marked as processing and customer notified' };
         break;
 
       case 'mark_delivered':
         await updateFulfillmentStatus(orderId, 'delivered');
-        result = { success: true, message: 'Order marked as delivered' };
+        // Send delivered notification email
+        try {
+          const orderDetails = await getOrderDetailsForEmail(orderId);
+          await sendOrderStatusNotification(
+            orderDetails.customerEmail,
+            orderDetails,
+            'delivered'
+          );
+        } catch (emailError) {
+          debugAdmin.error('DELIVERED_EMAIL_FAILED', {
+            orderId,
+            emailError: emailError.message
+          });
+          // Continue with success even if email fails
+        }
+        result = { success: true, message: 'Order marked as delivered and customer notified' };
         break;
 
       case 'mark_cancelled':
         await updateFulfillmentStatus(orderId, 'cancelled');
-        result = { success: true, message: 'Order marked as cancelled' };
+        // Send cancellation notification email
+        try {
+          const orderDetails = await getOrderDetailsForEmail(orderId);
+          await sendOrderStatusNotification(
+            orderDetails.customerEmail,
+            orderDetails,
+            'cancelled'
+          );
+        } catch (emailError) {
+          debugAdmin.error('CANCELLED_EMAIL_FAILED', {
+            orderId,
+            emailError: emailError.message
+          });
+          // Continue with success even if email fails
+        }
+        result = { success: true, message: 'Order marked as cancelled and customer notified' };
         break;
 
       default:
@@ -268,6 +313,45 @@ const extractItemsFromMetadata = (metadata) => {
   }
   
   return items;
+};
+
+// Get order details formatted for email notifications
+const getOrderDetailsForEmail = async (orderId) => {
+  try {
+    const paymentIntent = await stripe.paymentIntents.retrieve(orderId);
+    
+    if (!paymentIntent) {
+      throw new Error(`Payment intent ${orderId} not found`);
+    }
+    
+    if (!paymentIntent.metadata.customer_email) {
+      throw new Error('Customer email not found in payment intent metadata');
+    }
+
+    const items = extractItemsFromMetadata(paymentIntent.metadata);
+    
+    return {
+      orderNumber: paymentIntent.id,
+      customerName: paymentIntent.metadata.customer_name || 'Customer',
+      customerEmail: paymentIntent.metadata.customer_email,
+      orderDate: paymentIntent.metadata.order_date,
+      items: items,
+      shippingAddress: {
+        name: paymentIntent.metadata.shipping_name || paymentIntent.metadata.customer_name || 'Customer',
+        line1: paymentIntent.metadata.shipping_line1 || '',
+        city: paymentIntent.metadata.shipping_city || '',
+        state: paymentIntent.metadata.shipping_state || '',
+        postal_code: paymentIntent.metadata.shipping_postal_code || '',
+        country: paymentIntent.metadata.shipping_country || 'US'
+      }
+    };
+  } catch (error) {
+    debugAdmin.error('GET_ORDER_DETAILS_FOR_EMAIL_FAILED', {
+      orderId,
+      error: error.message
+    });
+    throw error;
+  }
 };
 
 // Utility function to get order details by ID
