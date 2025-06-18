@@ -518,20 +518,22 @@
 /* Card Element Styling */
 .card-element-container {
   padding: 12px 16px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  background-color: #ffffff;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background-color: var(--background);
+  transition: all 0.3s ease;
+  font-family: 'Kode Mono', monospace;
 }
 
 .card-element-container:focus-within {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(123, 191, 0, 0.1);
 }
 
 .card-element-container .StripeElement {
   height: 20px;
   padding: 0;
+  background-color: transparent;
 }
 
 .card-element-container .StripeElement--focus {
@@ -540,9 +542,9 @@
 }
 
 .card-element-container .StripeElement--invalid {
-  border-color: #ef4444;
+  border-color: #ff6b6b;
 }
 
 .card-element-container .StripeElement--complete {
-  border-color: #10b981;
+  border-color: var(--accent);
 }

@@ -14,13 +14,18 @@ const cardElementOptions = {
   style: {
     base: {
       fontSize: '16px',
-      color: '#424770',
+      color: '#ffffff',
+      backgroundColor: '#1a1a1a',
+      fontFamily: '"Kode Mono", monospace',
       '::placeholder': {
-        color: '#aab7c4',
+        color: '#888888',
       },
     },
     invalid: {
-      color: '#9e2146',
+      color: '#ff6b6b',
+    },
+    complete: {
+      color: '#7bbf00',
     },
   },
   hidePostalCode: false,
