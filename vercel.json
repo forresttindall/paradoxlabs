@@ -7,11 +7,6 @@
       "maxDuration": 30
     }
   },
-  "api": {
-    "bodyParser": {
-      "sizeLimit": "1mb"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/(.*)",
