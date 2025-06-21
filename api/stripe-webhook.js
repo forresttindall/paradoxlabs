@@ -202,6 +202,12 @@ const updateFulfillmentStatus = async (paymentIntentId, status, trackingInfo = n
   }
 };
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -209,9 +215,21 @@ export default async function handler(req, res) {
 
   const sig = req.headers['stripe-signature'];
   let event;
+  let body;
+
+  // Read raw body for Stripe signature verification
+  if (req.body instanceof Buffer) {
+    body = req.body;
+  } else {
+    const chunks = [];
+    for await (const chunk of req) {
+      chunks.push(chunk);
+    }
+    body = Buffer.concat(chunks);
+  }
 
   try {
-    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+    event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
     debugWebhook.log('WEBHOOK_RECEIVED', {
       type: event.type,
       id: event.id
