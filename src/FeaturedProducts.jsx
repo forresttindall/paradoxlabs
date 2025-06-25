@@ -31,7 +31,7 @@ function FeaturedProducts() {
         <Link to="/product/crux" className="product-link">
         <div className="product-card">
             <div className="product-image2">
-                <img src="/Images/IMG_0136.jpg" alt="Product 2" />
+                <img src="/Images/IMG_0139.jpg" alt="Product 2" />
             </div>
             <div className="product-info">
                 <h3>Crux</h3>

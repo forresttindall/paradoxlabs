@@ -90,8 +90,8 @@ function ProductDetail() {
             shortDescription: 'Covert non-metalic ultra tough last ditch multi-tool',
             fullDescription: 'The Crux is the ultimate covert multi-tool, designed for situations where traditional metal tools would be detected or confiscated. Crafted from advanced polymer composites, this tool passes through standard metal detectors while providing essential functionality when you need it most. Its ergonomic design and tactical applications make it an indispensable tool for security professionals and prepared individuals.\n\nThe concept for the Crux was born from necessity during a border crossing into Mexico, where all traditional metal tools had to be ditched at security checkpoints. Later that same trip, an unexpected encounter with a stranger in a narrow alleyway reinforced the critical need for a reliable, undetectable tool that could provide protection and utility when conventional options weren\'t available. This real-world experience shaped the Crux\'s design philosophy: a tool specifically engineered for travel through high-security areas where detection means confiscation, and where having something is the difference between vulnerability and preparedness.',
             images: [
-                '/Images/IMG_0136.jpg',
-                '/Images/IMG_0135.jpg'
+                '/Images/IMG_0139.jpg',
+                '/Images/IMG_0140.jpg'
             ],
             specifications: {
                 'Material': 'Carbon Fiber Nylon',

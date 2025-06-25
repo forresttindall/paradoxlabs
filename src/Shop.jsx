@@ -48,7 +48,7 @@ function Shop() {
             name: 'Crux',
             description: 'Covert non-metalic ultra tough last ditch multi-tool',
             price: 20,
-            image: '/Images/IMG_0136.jpg',
+            image: '/Images/IMG_0139.jpg',
             category: 'tools',
             shipping: 7,
             inventory: 10
