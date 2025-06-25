@@ -44,14 +44,14 @@ function Shop() {
             inventory: 0
         },
         {
-            id: 'splice',
-            name: 'Splice',
+            id: 'crux',
+            name: 'Crux',
             description: 'Covert non-metalic ultra tough last ditch multi-tool',
-            price: 0,
-            image: '/Images/comingsoon.jpg',
+            price: 20,
+            image: '/Images/IMG_0136.jpg',
             category: 'tools',
-            shipping: 8,
-            inventory: 0
+            shipping: 7,
+            inventory: 10
         },
     ];
     

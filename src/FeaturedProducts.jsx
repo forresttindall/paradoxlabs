@@ -31,12 +31,12 @@ function FeaturedProducts() {
         <Link to="/product/splice" className="product-link">
         <div className="product-card">
             <div className="product-image2">
-                <img src="/Images/comingsoon.jpg" alt="Product 2" />
+                <img src="/Images/IMG_0136.jpg" alt="Product 2" />
             </div>
             <div className="product-info">
-                <h3>Splice</h3>
+                <h3>Crux</h3>
                 <p className="product-spacer">Covert non-metalic ultra tough last ditch multi-tool</p>
-                <span className="price">$TBD</span>
+                <span className="price">$20</span>
             </div>
         </div>
         </Link> 

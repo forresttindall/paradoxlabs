@@ -82,20 +82,19 @@ function ProductDetail() {
             inventory: 10,
             category: 'accessories'
         },
-        'splice': {
-            id: 'splice',
-            name: 'Splice',
-            price: 0,
+        'crux': {
+            id: 'crux',
+            name: 'Crux',
+            price: 20,
             shipping: 7,
             shortDescription: 'Covert non-metalic ultra tough last ditch multi-tool',
-            fullDescription: 'The Splice is the ultimate covert multi-tool, designed for situations where traditional metal tools would be detected or confiscated. Crafted from advanced polymer composites, this tool passes through standard metal detectors while providing essential functionality when you need it most. Its ergonomic design and tactical applications make it an indispensable tool for security professionals and prepared individuals.',
+            fullDescription: 'The Crux is the ultimate covert multi-tool, designed for situations where traditional metal tools would be detected or confiscated. Crafted from advanced polymer composites, this tool passes through standard metal detectors while providing essential functionality when you need it most. Its ergonomic design and tactical applications make it an indispensable tool for security professionals and prepared individuals.\n\nThe concept for the Crux was born from necessity during a border crossing into Mexico, where all traditional metal tools had to be ditched at security checkpoints. Later that same trip, an unexpected encounter with a stranger in a narrow alleyway reinforced the critical need for a reliable, undetectable tool that could provide protection and utility when conventional options weren\'t available. This real-world experience shaped the Crux\'s design philosophy: a tool specifically engineered for travel through high-security areas where detection means confiscation, and where having something is the difference between vulnerability and preparedness.',
             images: [
-                '/Images/comingsoon.jpg'
+                '/Images/IMG_0135.jpg',
+                '/Images/IMG_0136.jpg'
             ],
             specifications: {
-                'Material': 'Advanced Carbon Fiber Polymer Composite',
-                'Blade Length': '75mm',
-                'Handle Length': '95mm',
+                'Material': 'Carbon Fiber Nylon',
                 'Detection': 'Metal detector safe',
                 'Durability': 'Impact resistant to 50J',
                 'Temperature Range': '-40°C to 120°C',
@@ -103,9 +102,8 @@ function ProductDetail() {
             },
             dimensions: {
                 'Overall Length': '170mm',
-                'Blade Width': '15mm',
-                'Handle Width': '20mm',
-                'Thickness': '8mm',
+                'Blade Width': '30mm',
+                'Thickness': '10mm',
                 'Weight': '45g'
             },
             features: [
@@ -116,7 +114,7 @@ function ProductDetail() {
                 'Lightweight yet durable',
                 'Discreet appearance'
             ],
-            inventory: 0,
+            inventory: 10,
             category: 'tools'
         },
         'test': {
