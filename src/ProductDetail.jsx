@@ -213,7 +213,12 @@ function ProductDetail() {
     
     const handleAddToCart = () => {
         if (quantity > 0) {
-            addToCart(product, quantity);
+            // Add image property from the first image in the images array
+            const productWithImage = {
+                ...product,
+                image: product.images[0]  // Use the first image as the main image
+            };
+            addToCart(productWithImage, quantity);
             setAddedToCart(true);
             
             // Reset the feedback after 2 seconds
