@@ -220,7 +220,8 @@
   order: 1;
 }
 
-.quantity-controls {
+/* Scope quantity controls to cart page */
+.cart .quantity-controls {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -230,7 +231,7 @@
   padding: 0.5rem;
 }
 
-.quantity-btn {
+.cart .quantity-btn {
   width: 30px;
   height: 30px;
   border: 1px solid rgba(123, 191, 0, 0.3);

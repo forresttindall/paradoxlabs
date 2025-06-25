@@ -28,7 +28,7 @@ function FeaturedProducts() {
         </div>
         </Link>
 
-        <Link to="/product/splice" className="product-link">
+        <Link to="/product/crux" className="product-link">
         <div className="product-card">
             <div className="product-image2">
                 <img src="/Images/IMG_0136.jpg" alt="Product 2" />
